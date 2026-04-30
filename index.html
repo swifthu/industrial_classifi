@@ -703,9 +703,13 @@
           // 使用 pinyin-match 库进行拼音匹配
           const result = PinyinMatch.match(node.name, lowerQuery);
           if (result) {
-            matched = true;
-            matchedType = 'pinyin';
-            matchedInfo = result; // [start, end] 位置
+            const [start, end] = result;
+            // 只接受完整匹配（从头匹配到末尾）
+            if (start === 0 && end === node.name.length) {
+              matched = true;
+              matchedType = 'pinyin';
+              matchedInfo = result;
+            }
           }
         }
 
