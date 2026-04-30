@@ -705,7 +705,7 @@
           if (result) {
             const [start, end] = result;
             // 只接受从开头开始的部分匹配（拼音前缀匹配）
-            if (start === 0 && end >= lowerQuery.length) {
+            if (start === 0) {
               matched = true;
               matchedType = 'pinyin';
               matchedInfo = result;
