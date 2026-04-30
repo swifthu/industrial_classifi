@@ -698,14 +698,14 @@
           matchedType = 'name';
         }
 
-        // 检查拼音首字母匹配（如：输入 dgy 匹配 "稻谷种植"）
+        // 检查拼音首字母匹配（如：输入 dgzz 匹配 "稻谷种植"）
         if (lowerQuery.length >= 3 && /^[a-z]+$/.test(lowerQuery)) {
           // 使用 pinyin-match 库进行拼音匹配
           const result = PinyinMatch.match(node.name, lowerQuery);
           if (result) {
             const [start, end] = result;
-            // 只接受完整匹配（从头匹配到末尾）
-            if (start === 0 && end === node.name.length) {
+            // 只接受从开头开始的部分匹配（拼音前缀匹配）
+            if (start === 0 && end >= lowerQuery.length) {
               matched = true;
               matchedType = 'pinyin';
               matchedInfo = result;
