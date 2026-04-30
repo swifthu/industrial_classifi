@@ -23,6 +23,7 @@
       --shadow: rgba(0, 0, 0, 0.15);
       --code-color: #1976D2;
       --toggle-icon: #757575;
+      --match-border: #1565C0; /* 匹配边框 - 亮色深蓝 */
     }
 
     /* 暗黑主题 */
@@ -41,6 +42,7 @@
       --shadow: rgba(0, 0, 0, 0.4);
       --code-color: #64B5F6;
       --toggle-icon: #B0B0B0;
+      --match-border: #f9a825; /* 匹配边框 - 暗色黄色 */
     }
 
     * {
@@ -186,10 +188,10 @@
       background-color: var(--hover-bg);
     }
 
-    /* 匹配节点（黄色边框） */
+    /* 匹配节点（边框） */
     .node-content.matched {
       background-color: transparent;
-      border: 2px solid var(--highlight-bg);
+      border: 2px solid var(--match-border);
       border-radius: 4px;
     }
 
