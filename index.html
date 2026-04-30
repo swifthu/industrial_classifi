@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>国民经济行业分类查询</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background-color: #F5F5F5;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    /* 顶部搜索区域 */
+    .search-header {
+      background-color: #1976D2;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .search-container {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      outline: none;
+      background: #fff;
+      color: #333;
+    }
+
+    .search-input::placeholder {
+      color: #999;
+    }
+
+    .search-input:focus {
+      box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.4);
+    }
+
+    .clear-btn {
+      padding: 12px 20px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+
+    .clear-btn:hover {
+      background-color: #1565C0;
+    }
+
+    .clear-btn:active {
+      background-color: #0D47A1;
+    }
+
+    /* 主内容区域 */
+    .main-content {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 20px 40px;
+    }
+
+    /* 树容器 */
+    .tree-container {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    /* 统计信息 */
+    .stats {
+      padding: 10px 0 20px;
+      color: #666;
+      font-size: 14px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 15px;
+    }
+
+    /* 树节点 */
+    .tree-node {
+      user-select: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .node-content {
+      display: flex;
+      align-items: center;
+      padding: 6px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      gap: 6px;
+    }
+
+    .node-content:hover {
+      background-color: #E3F2FD;
+    }
+
+    /* 高亮匹配节点 */
+    .node-content.highlight {
+      background-color: #FFEB3B;
+    }
+
+    .node-content.highlight:hover {
+      background-color: #FDD835;
+    }
+
+    /* 详情中高亮的关键字 */
+    .desc-highlight {
+      background-color: #FFEB3B;
+      padding: 0 2px;
+    }
+
+    /* 展开指示器 */
+    .toggle-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #666;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .toggle-icon.expanded {
+      transform: rotate(90deg);
+    }
+
+    .toggle-icon.no-children {
+      visibility: hidden;
+    }
+
+    /* 节点代码 */
+    .node-code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 13px;
+      color: #1976D2;
+      min-width: 50px;
+      flex-shrink: 0;
+    }
+
+    /* 节点名称 */
+    .node-name {
+      font-size: 14px;
+      color: #333;
+      flex: 1;
+    }
+
+    /* 子节点容器 */
+    .children-container {
+      padding-left: 24px;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    }
+
+    .children-container.expanded {
+      max-height: none;
+      opacity: 1;
+    }
+
+    /* 详细说明 */
+    .description-panel {
+      margin: 0;
+      padding: 0;
+      color: #9E9E9E;
+      font-size: 12px;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .description-panel.expanded {
+      display: block;
+      padding: 12px 16px 12px 44px;
+    }
+
+    .description-content {
+      white-space: pre-line;
+    }
+
+    /* 空状态 */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .empty-state-text {
+      font-size: 16px;
+    }
+
+    /* 加载状态 */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #E3F2FD;
+      border-top-color: #2196F3;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* 滚动条美化 */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #aaa;
+    }
+
+    /* 根节点样式 */
+    .root-node .node-content {
+      padding: 10px 12px;
+      background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .root-node .node-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #1565C0;
+    }
+  </style>
+</head>
+<body>
+  <header class="search-header">
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        id="searchInput"
+        placeholder="输入行业代码或名称搜索（如：0111、稻谷）"
+      >
+      <button class="clear-btn" id="clearBtn">清除</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="tree-container">
+      <div class="stats" id="stats"></div>
+      <div id="treeContent">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <div>加载中...</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // 全局数据
+    let treeData = null;
+    let currentHighlighted = new Set();
+    let expandedNodes = new Set();
+    let isSearching = false; // 标记是否处于搜索模式
+    let originalTreeHTML = ''; // 保存原始树HTML
+
+    // DOM 元素
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearBtn');
+    const treeContent = document.getElementById('treeContent');
+    const statsEl = document.getElementById('stats');
+
+    // 初始化
+    async function init() {
+      try {
+        const response = await fetch('./data/industry_tree.json');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        treeData = await response.json();
+        treeContent.innerHTML = ''; // 清除加载状态
+
+        // 问题1：如果根节点名称为"根节点"或"国民经济行业分类"，直接渲染其 children
+        if (treeData.name === '根节点' || treeData.name === '国民经济行业分类') {
+          if (treeData.children && treeData.children.length > 0) {
+            treeData.children.forEach(child => {
+              renderTree(child, treeContent, false, '');
+            });
+          }
+        } else {
+          renderTree(treeData, treeContent, false);
+        }
+        // 保存原始树HTML
+        originalTreeHTML = treeContent.innerHTML;
+        updateStats();
+      } catch (error) {
+        treeContent.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">⚠️</div>
+            <div class="empty-state-text">数据加载失败: ${error.message}</div>
+          </div>
+        `;
+        console.error('数据加载失败:', error);
+      }
+    }
+
+    // 渲染树
+    function renderTree(node, container, shouldExpand = false, menleiLetter = '') {
+      const isRoot = node.level === 0;
+      const hasChildren = node.children && node.children.length > 0;
+      const isLevel4 = node.level === 4;
+
+      // 计算完整代码：门类字母 + 当前节点代码
+      let fullCode = node.code;
+      if (!isRoot) {
+        if (menleiLetter) {
+          // 有门类字母，说明是非门类节点
+          fullCode = menleiLetter + node.code;
+        } else if (/^[A-Z]$/.test(node.code)) {
+          // 门类节点本身，保持原样
+          fullCode = node.code;
+        }
+      }
+
+      // 创建节点包装器
+      const nodeWrapper = document.createElement('div');
+      nodeWrapper.className = `tree-node${isRoot ? ' root-node' : ''}`;
+      nodeWrapper.dataset.code = node.code;
+
+      // 节点内容
+      const content = document.createElement('div');
+      content.className = 'node-content';
+      content.dataset.code = node.code;
+      content.dataset.level = node.level;
+
+      // 展开指示器
+      const toggleIcon = document.createElement('span');
+      toggleIcon.className = `toggle-icon${hasChildren ? '' : ' no-children'}`;
+      toggleIcon.textContent = hasChildren ? '▶' : '';
+      content.appendChild(toggleIcon);
+
+      // 根节点隐藏代码
+      if (!isRoot) {
+        const codeSpan = document.createElement('span');
+        codeSpan.className = 'node-code';
+        codeSpan.textContent = fullCode;
+        content.appendChild(codeSpan);
+      }
+
+      // 名称
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'node-name';
+      nameSpan.textContent = node.name;
+      content.appendChild(nameSpan);
+
+      nodeWrapper.appendChild(content);
+
+      // 详细说明面板（仅4位节点）- 无标题行，直接显示内容
+      let descPanel = null;
+      if (isLevel4 && node.description !== undefined && node.description !== null) {
+        descPanel = document.createElement('div');
+        descPanel.className = 'description-panel';
+        descPanel.dataset.code = node.code;
+        descPanel.innerHTML = `<div class="description-content">${node.description || '（暂无详细说明）'}</div>`;
+        nodeWrapper.appendChild(descPanel);
+      }
+
+      // 子节点容器
+      let childrenContainer = null;
+      if (hasChildren) {
+        childrenContainer = document.createElement('div');
+        childrenContainer.className = 'children-container';
+        childrenContainer.dataset.code = node.code;
+
+        // 向下传递门类字母（用于显示完整代码）
+        const childMenlei = (/^[A-Z]$/.test(node.code)) ? node.code : menleiLetter;
+        node.children.forEach(child => {
+          renderTree(child, childrenContainer, shouldExpand, childMenlei);
+        });
+
+        nodeWrapper.appendChild(childrenContainer);
+
+        // 事件处理：点击切换展开/折叠
+        content.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleNode(node.code, toggleIcon, childrenContainer);
+        });
+
+        // 初始展开/折叠状态
+        if (shouldExpand) {
+          toggleIcon.classList.add('expanded');
+          childrenContainer.classList.add('expanded');
+          expandedNodes.add(node.code);
+        }
+      } else {
+        // 无子节点时点击4位节点只显示详细说明
+        if (isLevel4) {
+          content.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleDescription(node.code);
+          });
+        }
+      }
+
+      container.appendChild(nodeWrapper);
+    }
+
+    // 切换节点展开/折叠
+    function toggleNode(code, toggleIcon, childrenContainer) {
+      const isExpanded = toggleIcon.classList.contains('expanded');
+
+      if (isExpanded) {
+        toggleIcon.classList.remove('expanded');
+        childrenContainer.classList.remove('expanded');
+        expandedNodes.delete(code);
+      } else {
+        toggleIcon.classList.add('expanded');
+        childrenContainer.classList.add('expanded');
+        expandedNodes.add(code);
+      }
+    }
+
+    // 切换详细说明显示
+    function toggleDescription(code) {
+      const panel = document.querySelector(`.description-panel[data-code="${code}"]`);
+      if (!panel) return;
+
+      const isExpanded = panel.classList.contains('expanded');
+
+      if (isExpanded) {
+        panel.classList.remove('expanded');
+      } else {
+        panel.classList.add('expanded');
+      }
+    }
+
+    // 搜索功能 - 在原有树上展开并高亮
+    function performSearch(query) {
+      // 清除之前的高亮
+      clearHighlights();
+
+      if (!query.trim()) {
+        updateStats();
+        return;
+      }
+
+      const lowerQuery = query.toLowerCase();
+
+      // 1. 找到所有匹配节点
+      const matchedNodes = [];
+      function searchInNode(node) {
+        let matched = false;
+
+        // 检查 code 匹配
+        if (node.code.toLowerCase().includes(lowerQuery)) {
+          matched = true;
+        }
+
+        // 检查 name 匹配
+        if (node.name.toLowerCase().includes(lowerQuery)) {
+          matched = true;
+        }
+
+        // 仅4位节点检查 description 匹配
+        if (node.level === 4 && node.description) {
+          if (node.description.toLowerCase().includes(lowerQuery)) {
+            matched = true;
+          }
+        }
+
+        if (matched) {
+          matchedNodes.push(node);
+        }
+
+        // 递归搜索子节点
+        if (node.children) {
+          node.children.forEach(child => searchInNode(child));
+        }
+      }
+
+      searchInNode(treeData);
+
+      if (matchedNodes.length === 0) {
+        updateStats(0);
+        return;
+      }
+
+      // 2. 展开到匹配节点的完整路径并高亮
+      matchedNodes.forEach(matchNode => {
+        // 获取完整路径（祖先节点）
+        const ancestors = getNodePath(matchNode);
+
+        // 展开所有祖先节点
+        ancestors.forEach(ancestor => {
+          expandNode(ancestor.code);
+        });
+
+        // 高亮匹配节点
+        highlightNode(matchNode.code);
+
+        // 如果是4位节点且匹配了description，也要高亮详情中的关键字
+        if (matchNode.level === 4 && matchNode.description) {
+          const descMatch = matchNode.description.toLowerCase().includes(query.toLowerCase());
+          if (descMatch) {
+            highlightDescription(matchNode.code, query);
+          }
+        }
+      });
+
+      // 滚动到第一个匹配节点
+      if (matchedNodes.length > 0) {
+        const firstMatch = matchedNodes[0];
+        const content = document.querySelector(`.node-content[data-code="${firstMatch.code}"]`);
+        if (content) {
+          setTimeout(() => {
+            content.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 100);
+        }
+      }
+
+      updateStats(matchedNodes.length);
+    }
+
+    // 获取父节点
+    function getParentNode(targetNode) {
+      let parent = null;
+
+      function findParent(node) {
+        if (node.children) {
+          for (const child of node.children) {
+            if (child.code === targetNode.code) {
+              parent = node;
+              return true;
+            }
+            if (findParent(child)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+
+      findParent(treeData);
+      return parent;
+    }
+
+    // 获取节点路径
+    function getNodePath(targetNode) {
+      const path = [];
+
+      function findPath(node, currentPath) {
+        if (node.code === targetNode.code) {
+          path.push(...currentPath);
+          return true;
+        }
+
+        if (node.children) {
+          for (const child of node.children) {
+            if (findPath(child, [...currentPath, node])) {
+              return true;
+            }
+          }
+        }
+
+        return false;
+      }
+
+      findPath(treeData, []);
+      return path;
+    }
+
+    // 计算完整代码（带门类前缀）
+    function getFullCode(node, parentCode = '') {
+      if (parentCode) {
+        return parentCode + node.code;
+      }
+      return node.code;
+    }
+
+    // 渲染过滤后的树
+    function renderFilteredTree(node, container, visibleNodes, matchedNodes) {
+      const isRoot = node.level === 0;
+      const hasChildren = node.children && node.children.length > 0;
+      const isLevel4 = node.level === 4;
+      const isMatched = matchedNodes.some(n => n.code === node.code);
+
+      // 如果节点不在可见集合中，不渲染
+      if (!visibleNodes.has(node.code)) {
+        return;
+      }
+
+      // 创建节点包装器
+      const nodeWrapper = document.createElement('div');
+      nodeWrapper.className = `tree-node${isRoot ? ' root-node' : ''}`;
+      nodeWrapper.dataset.code = node.code;
+
+      // 节点内容
+      const content = document.createElement('div');
+      content.className = 'node-content';
+      if (isMatched) {
+        content.classList.add('highlight');
+        currentHighlighted.add(node.code);
+      }
+      content.dataset.code = node.code;
+      content.dataset.level = node.level;
+
+      // 展开指示器
+      const toggleIcon = document.createElement('span');
+      toggleIcon.className = `toggle-icon${hasChildren ? '' : ' no-children'}`;
+      toggleIcon.textContent = hasChildren ? '▶' : '';
+      // 搜索模式下默认展开所有可见节点
+      if (hasChildren) {
+        toggleIcon.classList.add('expanded');
+      }
+      content.appendChild(toggleIcon);
+
+      // 根节点隐藏代码
+      if (!isRoot) {
+        const codeSpan = document.createElement('span');
+        codeSpan.className = 'node-code';
+        codeSpan.textContent = node.code;
+        content.appendChild(codeSpan);
+      }
+
+      // 名称
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'node-name';
+      nameSpan.textContent = node.name;
+      content.appendChild(nameSpan);
+
+      nodeWrapper.appendChild(content);
+
+      // 详细说明面板（仅4位节点）- 只有命中的节点才默认展开
+      let descPanel = null;
+      if (isLevel4 && node.description) {
+        descPanel = document.createElement('div');
+        descPanel.className = `description-panel${isMatched ? ' expanded' : ''}`;
+        descPanel.dataset.code = node.code;
+        descPanel.innerHTML = `<div class="description-content">${node.description}</div>`;
+        nodeWrapper.appendChild(descPanel);
+      }
+
+      // 子节点容器 - 搜索模式下默认折叠，由用户手动点击展开
+      if (hasChildren) {
+        const childrenContainer = document.createElement('div');
+        childrenContainer.className = 'children-container'; // 默认折叠
+        childrenContainer.dataset.code = node.code;
+
+        // 只渲染可见的子节点
+        node.children.forEach(child => {
+          if (visibleNodes.has(child.code)) {
+            renderFilteredTree(child, childrenContainer, visibleNodes, matchedNodes);
+          }
+        });
+
+        nodeWrapper.appendChild(childrenContainer);
+      }
+
+      container.appendChild(nodeWrapper);
+
+      // 滚动到第一个匹配节点
+      if (isMatched) {
+        setTimeout(() => {
+          content.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+
+    // 展开所有祖先节点
+    function expandAllAncestors(nodesToExpand) {
+      nodesToExpand.forEach(code => {
+        if (!expandedNodes.has(code)) {
+          const childrenContainer = document.querySelector(`.children-container[data-code="${code}"]`);
+          const nodeContent = document.querySelector(`.node-content[data-code="${code}"]`);
+
+          if (childrenContainer) {
+            const icon = nodeContent?.querySelector('.toggle-icon');
+            if (icon) icon.classList.add('expanded');
+            childrenContainer.classList.add('expanded');
+            expandedNodes.add(code);
+          }
+        }
+      });
+    }
+
+    // 展开单个节点
+    function expandNode(code) {
+      if (expandedNodes.has(code)) return;
+
+      const childrenContainer = document.querySelector(`.children-container[data-code="${code}"]`);
+      const nodeContent = document.querySelector(`.node-content[data-code="${code}"]`);
+
+      if (childrenContainer) {
+        const icon = nodeContent?.querySelector('.toggle-icon');
+        if (icon) icon.classList.add('expanded');
+        childrenContainer.classList.add('expanded');
+        expandedNodes.add(code);
+      }
+    }
+
+    // 高亮节点
+    function highlightNode(code) {
+      const content = document.querySelector(`.node-content[data-code="${code}"]`);
+      if (content) {
+        content.classList.add('highlight');
+      }
+    }
+
+    // 高亮详情中的关键字
+    function highlightDescription(code, query) {
+      const panel = document.querySelector(`.description-panel[data-code="${code}"]`);
+      if (panel && query) {
+        const content = panel.querySelector('.description-content');
+        if (content) {
+          // 高亮匹配的关键字（使用mark标签）
+          const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+          content.innerHTML = content.textContent.replace(regex, '<mark class="desc-highlight">$1</mark>');
+        }
+      }
+    }
+
+    // 转义正则特殊字符
+    function escapeRegex(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // 清除高亮
+    function clearHighlights() {
+      // 清除节点高亮
+      document.querySelectorAll('.node-content.highlight').forEach(el => {
+        el.classList.remove('highlight');
+      });
+      // 清除详情中的高亮
+      document.querySelectorAll('.desc-highlight').forEach(el => {
+        el.outerHTML = el.textContent;
+      });
+      // 折叠所有展开的节点
+      document.querySelectorAll('.children-container.expanded').forEach(el => {
+        el.classList.remove('expanded');
+      });
+      document.querySelectorAll('.toggle-icon.expanded').forEach(el => {
+        el.classList.remove('expanded');
+      });
+      // 折叠所有展开的详情
+      document.querySelectorAll('.description-panel.expanded').forEach(el => {
+        el.classList.remove('expanded');
+      });
+      expandedNodes.clear();
+      currentHighlighted.clear();
+    }
+
+    // 更新统计信息
+    function updateStats(matchCount = null) {
+      if (matchCount !== null) {
+        statsEl.textContent = matchCount > 0
+          ? `找到 ${matchCount} 个匹配结果`
+          : '未找到匹配结果';
+      } else {
+        // 统计细类数量（4位节点）
+        let leafCount = 0;
+        function countLeaves(node) {
+          if (node.level === 4) {
+            leafCount++;
+          }
+          if (node.children) {
+            node.children.forEach(countLeaves);
+          }
+        }
+        countLeaves(treeData);
+        statsEl.textContent = `共 ${leafCount} 个细类`;
+      }
+    }
+
+    // 事件监听
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        performSearch(searchInput.value);
+      }
+    });
+
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      clearHighlights();
+      isSearching = false;
+
+      // 恢复原始树HTML
+      treeContent.innerHTML = originalTreeHTML;
+
+      // 重新绑定事件（因为innerHTML会丢失事件）
+      rebindTreeEvents();
+
+      // 折叠所有节点（恢复到初始状态）
+      document.querySelectorAll('.children-container.expanded').forEach(el => {
+        el.classList.remove('expanded');
+      });
+      document.querySelectorAll('.toggle-icon.expanded').forEach(el => {
+        el.classList.remove('expanded');
+      });
+      document.querySelectorAll('.description-panel.expanded').forEach(el => {
+        el.classList.remove('expanded');
+      });
+      expandedNodes.clear();
+      updateStats();
+      searchInput.focus();
+    });
+
+    // 重新绑定树事件
+    function rebindTreeEvents() {
+      // 绑定所有有子节点的展开/折叠事件
+      document.querySelectorAll('.tree-node').forEach(nodeWrapper => {
+        const code = nodeWrapper.dataset.code;
+        const content = nodeWrapper.querySelector('.node-content');
+        const childrenContainer = nodeWrapper.querySelector('.children-container');
+        const toggleIcon = nodeWrapper.querySelector('.toggle-icon');
+
+        if (childrenContainer && content && toggleIcon) {
+          content.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleNode(code, toggleIcon, childrenContainer);
+          });
+        } else if (content && code) {
+          // 检查是否是4位节点（需要显示详细说明）
+          const isLevel4 = content.dataset.level === '4';
+          if (isLevel4) {
+            content.addEventListener('click', (e) => {
+              e.stopPropagation();
+              toggleDescription(code);
+            });
+          }
+        }
+      });
+    }
+
+    // 启动
+    init();
+  </script>
+</body>
+</html>
