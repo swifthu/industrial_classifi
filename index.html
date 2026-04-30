@@ -201,6 +201,13 @@
       padding: 0 2px;
     }
 
+    /* 名称中高亮的关键字 */
+    .name-highlight {
+      background-color: var(--highlight-bg);
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+
     /* 展开指示器 */
     .toggle-icon {
       width: 20px;
@@ -717,15 +724,19 @@
       const matchedNodes = [];
       function searchInNode(node) {
         let matched = false;
+        let matchedType = ''; // 'code', 'name', 'pinyin', 'description'
+        let matchedInfo = null; // 匹配详情（拼音匹配时的位置等）
 
         // 检查 code 匹配
         if (node.code.toLowerCase().includes(lowerQuery)) {
           matched = true;
+          matchedType = 'code';
         }
 
         // 检查 name 匹配
         if (node.name.toLowerCase().includes(lowerQuery)) {
           matched = true;
+          matchedType = 'name';
         }
 
         // 检查拼音首字母匹配（如：输入 dgy 匹配 "稻谷种植"）
@@ -733,6 +744,8 @@
           const result = PinyinMatch.match(node.name, lowerQuery);
           if (result) {
             matched = true;
+            matchedType = 'pinyin';
+            matchedInfo = result; // [start, end] 位置
           }
         }
 
@@ -740,11 +753,12 @@
         if (node.level === 4 && node.description) {
           if (node.description.toLowerCase().includes(lowerQuery)) {
             matched = true;
+            matchedType = 'description';
           }
         }
 
         if (matched) {
-          matchedNodes.push(node);
+          matchedNodes.push({ node, matchedType, matchedInfo });
         }
 
         // 递归搜索子节点
@@ -761,30 +775,30 @@
       }
 
       // 2. 展开到匹配节点的完整路径并高亮
-      matchedNodes.forEach(matchNode => {
+      matchedNodes.forEach(match => {
+        const { node, matchedType, matchedInfo } = match;
         // 获取完整路径（祖先节点）
-        const ancestors = getNodePath(matchNode);
+        const ancestors = getNodePath(node);
 
         // 展开所有祖先节点
         ancestors.forEach(ancestor => {
           expandNode(ancestor.code);
         });
 
-        // 高亮匹配节点
-        highlightNode(matchNode.code);
+        // 高亮匹配的文字
+        highlightName(node, matchedType, matchedInfo, query);
 
         // 如果是4位节点且匹配了description，也要高亮详情中的关键字
-        if (matchNode.level === 4 && matchNode.description) {
-          const descMatch = matchNode.description.toLowerCase().includes(query.toLowerCase());
-          if (descMatch) {
-            highlightDescription(matchNode.code, query);
+        if (node.level === 4 && node.description) {
+          if (node.description.toLowerCase().includes(query.toLowerCase())) {
+            highlightDescription(node.code, query);
           }
         }
       });
 
       // 滚动到第一个匹配节点
       if (matchedNodes.length > 0) {
-        const firstMatch = matchedNodes[0];
+        const firstMatch = matchedNodes[0].node;
         const content = document.querySelector(`.node-content[data-code="${firstMatch.code}"]`);
         if (content) {
           setTimeout(() => {
@@ -973,11 +987,32 @@
       }
     }
 
-    // 高亮节点
-    function highlightNode(code) {
-      const content = document.querySelector(`.node-content[data-code="${code}"]`);
-      if (content) {
-        content.classList.add('highlight');
+    // 高亮匹配的文字（按字符高亮）
+    function highlightName(node, matchedType, matchedInfo, query) {
+      const content = document.querySelector(`.node-content[data-code="${node.code}"]`);
+      if (!content) return;
+
+      const nameSpan = content.querySelector('.node-name');
+      if (!nameSpan) return;
+
+      // 重建高亮的名称
+      if (matchedType === 'pinyin' && matchedInfo) {
+        // 拼音匹配：找到匹配的汉字位置并高亮
+        const [start, end] = matchedInfo;
+        const text = node.name;
+        const before = text.slice(0, start);
+        const matched = text.slice(start, end);
+        const after = text.slice(end);
+        nameSpan.innerHTML = before + '<mark class="name-highlight">' + matched + '</mark>' + after;
+      } else if (matchedType === 'name') {
+        // 中文匹配：精确匹配关键词并高亮
+        const text = node.name;
+        const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+        nameSpan.innerHTML = text.replace(regex, '<mark class="name-highlight">$1</mark>');
+      } else if (matchedType === 'code') {
+        // code 匹配：不做特殊处理，保持原样
+      } else if (matchedType === 'description') {
+        // 仅 description 匹配，不高亮名称
       }
     }
 
@@ -1004,6 +1039,10 @@
       // 清除节点高亮
       document.querySelectorAll('.node-content.highlight').forEach(el => {
         el.classList.remove('highlight');
+      });
+      // 清除名称中的高亮
+      document.querySelectorAll('.name-highlight').forEach(el => {
+        el.outerHTML = el.textContent;
       });
       // 清除详情中的高亮
       document.querySelectorAll('.desc-highlight').forEach(el => {
