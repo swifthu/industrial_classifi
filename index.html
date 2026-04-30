@@ -186,6 +186,11 @@
       background-color: var(--hover-bg);
     }
 
+    /* 匹配节点（浅蓝底） */
+    .node-content.matched {
+      background-color: var(--hover-bg);
+    }
+
     /* 高亮匹配节点 */
     .node-content.highlight {
       background-color: var(--highlight-bg);
@@ -1003,6 +1008,9 @@
       const nameSpan = content.querySelector('.node-name');
       if (!nameSpan) return;
 
+      // 添加匹配标记
+      content.classList.add('matched');
+
       // 重建高亮的名称
       if (matchedType === 'pinyin' && matchedInfo) {
         // 拼音匹配：[0, query.length] 表示整个名称的拼音前缀匹配
@@ -1052,6 +1060,9 @@
     // 清除高亮
     function clearHighlights() {
       // 清除节点高亮
+      document.querySelectorAll('.node-content.matched').forEach(el => {
+        el.classList.remove('matched');
+      });
       document.querySelectorAll('.node-content.highlight').forEach(el => {
         el.classList.remove('highlight');
       });
