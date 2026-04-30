@@ -741,11 +741,13 @@
 
         // 检查拼音首字母匹配（如：输入 dgy 匹配 "稻谷种植"）
         if (lowerQuery.length >= 2 && /^[a-z]+$/.test(lowerQuery)) {
-          const result = PinyinMatch.match(node.name, lowerQuery);
-          if (result) {
+          // 获取名称的所有拼音首字母
+          const firstLetters = getFirstLetters(node.name).toLowerCase();
+          // 检查是否以输入的拼音开头
+          if (firstLetters.startsWith(lowerQuery)) {
             matched = true;
             matchedType = 'pinyin';
-            matchedInfo = result; // [start, end] 位置
+            matchedInfo = [0, lowerQuery.length]; // 高亮整个拼音匹配部分
           }
         }
 
@@ -997,20 +999,19 @@
 
       // 重建高亮的名称
       if (matchedType === 'pinyin' && matchedInfo) {
-        // 拼音匹配：找到匹配的汉字位置并高亮
-        const [start, end] = matchedInfo;
+        // 拼音匹配：[0, query.length] 表示整个名称的拼音前缀匹配
         const text = node.name;
-        const matchedChars = text.slice(start, end);
+        const [start, end] = matchedInfo;
 
-        // 检查是否匹配了大部分（>=75%的字符）或完整匹配
-        if (end >= text.length || matchedChars.length >= Math.ceil(text.length * 0.75)) {
-          // 匹配了大部分或全部，高亮整个名称
+        if (start === 0 && end >= Math.ceil(text.length * 0.75)) {
+          // 拼音匹配了整个名称的大部分，高亮整个名称
           nameSpan.innerHTML = '<mark class="name-highlight">' + text + '</mark>';
         } else {
-          // 部分匹配，只高亮匹配的汉字
+          // 部分匹配
           const before = text.slice(0, start);
+          const matched = text.slice(start, end);
           const after = text.slice(end);
-          nameSpan.innerHTML = before + '<mark class="name-highlight">' + matchedChars + '</mark>' + after;
+          nameSpan.innerHTML = before + '<mark class="name-highlight">' + matched + '</mark>' + after;
         }
       } else if (matchedType === 'name') {
         // 中文匹配：精确匹配关键词并高亮
