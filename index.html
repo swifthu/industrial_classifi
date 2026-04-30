@@ -720,6 +720,12 @@
 
       const lowerQuery = query.toLowerCase();
 
+      // 检查是否为2个字母的拼音输入
+      if (lowerQuery.length === 2 && /^[a-z]+$/.test(lowerQuery)) {
+        updateStats(null, '拼音码至少输入三位');
+        return;
+      }
+
       // 1. 找到所有匹配节点
       const matchedNodes = [];
       function searchInNode(node) {
@@ -740,7 +746,7 @@
         }
 
         // 检查拼音首字母匹配（如：输入 dgy 匹配 "稻谷种植"）
-        if (lowerQuery.length >= 2 && /^[a-z]+$/.test(lowerQuery)) {
+        if (lowerQuery.length >= 3 && /^[a-z]+$/.test(lowerQuery)) {
           // 获取名称的所有拼音首字母
           const firstLetters = getFirstLetters(node.name).toLowerCase();
           // 检查是否以输入的拼音开头
@@ -1073,8 +1079,10 @@
     }
 
     // 更新统计信息
-    function updateStats(matchCount = null) {
-      if (matchCount !== null) {
+    function updateStats(matchCount = null, tip = null) {
+      if (tip) {
+        statsEl.textContent = tip;
+      } else if (matchCount !== null) {
         statsEl.textContent = matchCount > 0
           ? `找到 ${matchCount} 个匹配结果`
           : '未找到匹配结果';
