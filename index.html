@@ -757,8 +757,8 @@
           }
         }
 
-        // 仅4位节点检查 description 匹配
-        if (node.level === 4 && node.description) {
+        // 仅4位节点检查 description 匹配（仅当名称未匹配时才设置）
+        if (!matched && node.level === 4 && node.description) {
           if (node.description.toLowerCase().includes(lowerQuery)) {
             matched = true;
             matchedType = 'description';
@@ -796,11 +796,9 @@
         // 高亮匹配的文字
         highlightName(node, matchedType, matchedInfo, query);
 
-        // 如果是4位节点且匹配了description，也要高亮详情中的关键字
-        if (node.level === 4 && node.description) {
-          if (node.description.toLowerCase().includes(query.toLowerCase())) {
-            highlightDescription(node.code, query);
-          }
+        // 如果是4位节点且仅匹配了description，也高亮详情中的关键字
+        if (matchedType === 'description' && node.level === 4 && node.description) {
+          highlightDescription(node.code, query);
         }
       });
 
