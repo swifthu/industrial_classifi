@@ -189,8 +189,12 @@
     /* 匹配节点（蓝色边框） */
     .node-content.matched {
       background-color: transparent;
-      border: 2px solid var(--code-color);
+      border: 2px solid var(--hover-bg);
       border-radius: 4px;
+    }
+
+    .node-content.matched:hover {
+      background-color: var(--hover-bg);
     }
 
     /* 高亮匹配节点 */
