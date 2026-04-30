@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>国民经济行业分类查询</title>
+  <!-- pinyin-match 拼音匹配库 -->
+  <script src="https://cdn.jsdelivr.net/npm/pinyin-match@1.2.2/dist/main.js"></script>
   <style>
     /* CSS 变量 - 亮色主题 */
     :root {
@@ -728,8 +730,8 @@
 
         // 检查拼音首字母匹配（如：输入 dgy 匹配 "稻谷种植"）
         if (lowerQuery.length >= 2 && /^[a-z]+$/.test(lowerQuery)) {
-          const firstLetters = getFirstLetters(node.name);
-          if (firstLetters && firstLetters.toLowerCase().startsWith(lowerQuery)) {
+          const result = PinyinMatch.match(node.name, lowerQuery);
+          if (result) {
             matched = true;
           }
         }
