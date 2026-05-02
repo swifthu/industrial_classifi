@@ -160,7 +160,69 @@ def build_tag_mapping():
                         }
 
     wb.close()
+
+    # 特别处理：战略性新兴产业 tagDetail 需要从"战略新兴产业重点说明" Sheet获取细化说明
+    _enrich_strategic_details(tag_mapping)
+
     return tag_mapping
+
+
+def _enrich_strategic_details(tag_mapping):
+    """
+    从"战略新兴产业重点说明"Sheet获取战略性新兴产业的细化说明
+    结构：
+    - C列 = 国民经济行业代码（4位，可能带*）
+    - E列 = 具体产品细项（可能有多个连续行属于同一个代码）
+    - 当C列有新的非空值时，表示前一个代码的细化说明已经结束
+    """
+    wb = openpyxl.load_workbook(SPEC_FILE, data_only=True)
+
+    if "战略新兴产业重点说明" not in wb.sheetnames:
+        print("警告: '战略新兴产业重点说明' Sheet不存在")
+        wb.close()
+        return
+
+    ws = wb["战略新兴产业重点说明"]
+    current_code = None
+    code_details = {}  # code -> [detail1, detail2, ...]
+
+    for i, row in enumerate(ws.iter_rows(min_row=1, values_only=True), 1):
+        # 跳过标题行（前3行）
+        if i <= 3:
+            continue
+
+        c_val = row[2] if len(row) > 2 else None  # C列
+        e_val = row[4] if len(row) > 4 else None  # E列
+
+        # 如果C列有新值（4位代码），更新当前代码
+        if c_val and str(c_val).strip():
+            s = str(c_val).strip()
+            # 处理带*号的代码（如"3919*"或"3919"）
+            if len(s) >= 4 and s[:4].isdigit():
+                code_part = s[:4]
+                has_star = '*' in s
+                current_code = code_part + ('*' if has_star else '')
+
+                if current_code not in code_details:
+                    code_details[current_code] = []
+
+        # 如果C列为空且E列有值，添加到当前代码的列表
+        if current_code and not c_val and e_val and str(e_val).strip():
+            code_details[current_code].append(str(e_val).strip())
+
+    wb.close()
+
+    # 更新 tag_mapping 中的 strategic tagDetail
+    for code_4d, details in code_details.items():
+        if details:
+            # 匹配：去掉*号后匹配
+            code_base = code_4d.rstrip('*')
+
+            if code_base in tag_mapping and "strategic" in tag_mapping[code_base]:
+                # 将详细列表加入 tagDetail
+                tag_mapping[code_base]["strategic"]["details"] = details
+
+    print(f"    从'战略新兴产业重点说明'解析了 {len(code_details)} 个代码的细化说明")
 
 
 def extract_codes_from_string(code_str):
@@ -247,6 +309,9 @@ def enhance_data():
                         detail = {"description": tag_info["description"]}
                         if tag_info["industry"]:
                             detail["industry"] = tag_info["industry"]
+                        # 如果有 details（从"战略新兴产业重点说明"获取），也加入
+                        if "details" in tag_info:
+                            detail["details"] = tag_info["details"]
                         node["tagDetail"][tag_key] = detail
                     else:
                         node["tagDetail"][tag_key] = {}
