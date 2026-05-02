@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>国民经济行业分类查询</title>
-  <!-- pinyin-match 拼音匹配库 -->
-  <script src="https://cdn.jsdelivr.net/npm/pinyin-match@1.2.2/dist/main.js"></script>
+  <!-- pinyin-pro 拼音库 -->
+  <script src="https://cdn.jsdelivr.net/npm/pinyin-pro/dist/index.js"></script>
   <style>
     /* CSS 变量 - 亮色主题 */
     :root {
@@ -673,10 +673,11 @@
 
       const lowerQuery = query.toLowerCase();
 
-      // 检查是否为2个字母的拼音输入
-      if (lowerQuery.length === 2 && /^[a-z]+$/.test(lowerQuery)) {
-        updateStats(null, '拼音码至少输入三位');
-        return;
+      // 检查是否为2个字母的拼音输入（仅显示提示，不阻断搜索）
+      const isTwoCharPinyin = lowerQuery.length === 2 && /^[a-z]+$/.test(lowerQuery);
+      let pinyinTip = '';
+      if (isTwoCharPinyin) {
+        pinyinTip = '拼音码至少输入三位';
       }
 
       // 1. 找到所有匹配节点
@@ -698,18 +699,22 @@
           matchedType = 'name';
         }
 
-        // 检查拼音首字母匹配（如：输入 dgzz 匹配 "稻谷种植"）
+        // 检查拼音匹配（如：输入 dgzz 匹配 "稻谷种植"，输入 jht 匹配 "合成纤维单(聚合)体制造"）
         if (lowerQuery.length >= 3 && /^[a-z]+$/.test(lowerQuery)) {
-          // 使用 pinyin-match 库进行拼音匹配
-          const result = PinyinMatch.match(node.name, lowerQuery);
-          if (result) {
-            const [start, end] = result;
-            // 只接受从开头开始的部分匹配（拼音前缀匹配）
-            if (start === 0) {
-              matched = true;
-              matchedType = 'pinyin';
-              matchedInfo = result;
-            }
+          // 使用 pinyin-pro 获取首字母和全拼（无声调）
+          const firstPinyin = pinyinPro.pinyin(node.name, { pattern: 'first', toneType: 'none' }).replace(/\s/g, '');
+          const fullPinyin = pinyinPro.pinyin(node.name, { toneType: 'none' }).replace(/\s/g, '');
+
+          // 检查首字母匹配（支持开头和中间匹配）
+          const firstMatch = firstPinyin.startsWith(lowerQuery) || firstPinyin === lowerQuery || firstPinyin.includes(lowerQuery);
+          // 检查全拼匹配（前缀匹配）
+          const fullMatch = fullPinyin.startsWith(lowerQuery) || fullPinyin.includes(lowerQuery);
+
+          if (firstMatch || fullMatch) {
+            matched = true;
+            matchedType = 'pinyin';
+            // 记录是首字母匹配还是全拼匹配
+            matchedInfo = [0, node.name.length, firstMatch ? 'first' : 'full'];
           }
         }
 
@@ -733,12 +738,49 @@
 
       searchInNode(treeData);
 
+      // 2. 显示统计信息（包含拼音提示和匹配模式）
       if (matchedNodes.length === 0) {
-        updateStats(0);
+        updateStats(0, pinyinTip || null);
         return;
       }
 
-      // 2. 展开到匹配节点的完整路径并高亮
+      // 判断匹配模式：根据实际匹配类型判断
+      let matchMode = '';
+      if (/^[a-z]+$/.test(lowerQuery)) {
+        // 检查是否有全拼匹配
+        const hasFullMatch = matchedNodes.some(m => m.matchedType === 'pinyin' && m.matchedInfo && m.matchedInfo[2] === 'full');
+        // 检查是否有首字母匹配
+        const hasFirstMatch = matchedNodes.some(m => m.matchedType === 'pinyin' && m.matchedInfo && m.matchedInfo[2] === 'first');
+
+        if (hasFullMatch && !hasFirstMatch) {
+          matchMode = '全拼匹配';
+        } else if (hasFirstMatch && !hasFullMatch) {
+          matchMode = '首字母匹配';
+        } else {
+          // 混合或未知
+          matchMode = '拼音匹配';
+        }
+      } else {
+        matchMode = '精确匹配';
+      }
+
+      const pinyinPrefix = pinyinTip ? `${pinyinTip}，` : '';
+
+      // 收集拼音匹配的关键字（显示完整节点名称）
+      let matchedKeywords = [];
+      matchedNodes.forEach(match => {
+        if (match.matchedType === 'pinyin') {
+          const name = match.node.name;
+          if (name && !matchedKeywords.includes(name)) {
+            matchedKeywords.push(name);
+          }
+        }
+      });
+
+      const keywordInfo = matchedKeywords.length > 0 ? `「${matchedKeywords.join('、')}」` : '';
+      updateStats(matchedNodes.length, pinyinPrefix + `找到 ${matchedNodes.length} 个匹配结果（${matchMode}）${keywordInfo}`);
+
+      // 3. 展开并高亮匹配节点
       matchedNodes.forEach(match => {
         const { node, matchedType, matchedInfo } = match;
         // 获取完整路径（祖先节点）
@@ -770,8 +812,6 @@
           }, 100);
         }
       }
-
-      updateStats(matchedNodes.length);
     }
 
     // 获取父节点
@@ -964,25 +1004,9 @@
 
       // 重建高亮的名称
       if (matchedType === 'pinyin' && matchedInfo) {
-        // 拼音匹配：pinyin-match 返回 [start, end] 字符位置
+        // 拼音匹配：始终高亮整个名称
         const text = node.name;
-        const [start, end] = matchedInfo;
-        const matchedChars = text.slice(start, end);
-
-        // 如果匹配了整个名称的大部分（>=75%），高亮整个名称
-        if (matchedChars.length >= Math.ceil(text.length * 0.75)) {
-          nameSpan.innerHTML = '<mark class="name-highlight">' + text + '</mark>';
-        } else if (matchedChars.length >= 2) {
-          // 部分匹配，至少2个汉字
-          const before = text.slice(0, start);
-          const after = text.slice(end);
-          nameSpan.innerHTML = before + '<mark class="name-highlight">' + matchedChars + '</mark>' + after;
-        } else {
-          // 只匹配了1个汉字
-          const before = text.slice(0, start);
-          const after = text.slice(end);
-          nameSpan.innerHTML = before + '<mark class="name-highlight">' + matchedChars + '</mark>' + after;
-        }
+        nameSpan.innerHTML = '<mark class="name-highlight">' + text + '</mark>';
       } else if (matchedType === 'name') {
         // 中文匹配：精确匹配关键词并高亮
         const text = node.name;
@@ -1047,26 +1071,29 @@
 
     // 更新统计信息
     function updateStats(matchCount = null, tip = null) {
-      if (tip) {
+      // 优先使用 tip 参数（包含匹配模式信息）
+      if (tip !== null && tip !== undefined && tip !== '') {
         statsEl.textContent = tip;
-      } else if (matchCount !== null) {
+        return;
+      }
+      if (matchCount !== null) {
         statsEl.textContent = matchCount > 0
           ? `找到 ${matchCount} 个匹配结果`
           : '未找到匹配结果';
-      } else {
-        // 统计细类数量（4位节点）
-        let leafCount = 0;
-        function countLeaves(node) {
-          if (node.level === 4) {
-            leafCount++;
-          }
-          if (node.children) {
-            node.children.forEach(countLeaves);
-          }
-        }
-        countLeaves(treeData);
-        statsEl.textContent = `共 ${leafCount} 个细类`;
+        return;
       }
+      // 无参数时统计细类数量
+      let leafCount = 0;
+      function countLeaves(node) {
+        if (node.level === 4) {
+          leafCount++;
+        }
+        if (node.children) {
+          node.children.forEach(countLeaves);
+        }
+      }
+      countLeaves(treeData);
+      statsEl.textContent = `共 ${leafCount} 个细类`;
     }
 
     // 事件监听
