@@ -17,9 +17,10 @@ WORK_DIR = "/Users/jimmyhu/Documents/Python/industrial_classifi"
 LEVEL4_CODE_LENGTH = 4
 # Excel 解析起始行（跳过标题行）
 EXCEL_MIN_ROW = 2
-SPEC_FILE = os.path.join(WORK_DIR, "spec.xlsx")
-BASE_DATA_FILE = os.path.join(WORK_DIR, "data", "industry_tree.json")
-OUTPUT_FILE = os.path.join(WORK_DIR, "data", "industry_tree_advanced.json")
+WORKTREE_DIR = "/Users/jimmyhu/Documents/Python/industrial_classifi/.claude/worktrees/laughing-yonath-36fee0"
+SPEC_FILE = "/Users/jimmyhu/Documents/Python/industrial_classifi/spec.xlsx"
+BASE_DATA_FILE = os.path.join(WORKTREE_DIR, "data", "industry_tree_basic.json")
+OUTPUT_FILE = os.path.join(WORKTREE_DIR, "data", "industry_tree_advanced.json")
 
 # 标签定义
 TAGS_MAP = {
@@ -49,7 +50,7 @@ SHEET_CONFIG = {
     "知识产权密集型产业": ("ip密集型", [3], None, None),      # D列 - 4位代码3921
     "战略性新兴产业 ": ("strategic", [2], 5, None),          # C列(索引2)是代码，F列(索引5)是行业信息
     "数字经济核心产业": ("digital", [5], 7, None),           # F列(索引5)是代码，H列(索引7)是行业信息
-    "养老产业": ("pension", [5], 8, None),                  # F列(索引5)是代码，I列(索引8)是行业信息
+    "养老产业": ("pension", [5], 8, None),                  # F列(索引5)是带*代码，I列(索引8)是行业信息
     "文化产业": ("culture", [5], None, None),               # F列 - 4位代码
 }
 
@@ -108,12 +109,12 @@ def build_tag_mapping():
 
     for sheet_name, (tag_key, code_col_idx_list, industry_col_idx, desc_col_idx) in SHEET_CONFIG.items():
         # 处理 sheet_name 末尾空格问题（如"战略性新兴产业 "）
-        normalized_name = sheet_name.strip()
-        if normalized_name not in wb.sheetnames:
-            print(f"警告: Sheet '{normalized_name}' 不存在，跳过")
+        # 直接用原始 sheet_name 访问（openpyxl 支持精确匹配）
+        if sheet_name not in wb.sheetnames:
+            print(f"警告: Sheet '{sheet_name}' 不存在，跳过")
             continue
 
-        ws = wb[normalized_name]
+        ws = wb[sheet_name]
 
         for row in ws.iter_rows(min_row=EXCEL_MIN_ROW):  # 跳过标题行
             # 支持多个代码列
@@ -164,21 +165,29 @@ def build_tag_mapping():
 
 def extract_codes_from_string(code_str):
     """
-    从字符串中提取所有4位代码及其*标记
-    例如："3911 计算机整机制造" -> [("3911", False, "3911")]
-          "6242* 外卖送餐服务8010* 家庭服务" -> [("6242", True, "6242*"), ("8010", True, "8010*")]
+    从字符串中提取所有4位代码及其完整内容
+    例如："3911 计算机整机制造" -> [("3911", False, "3911 计算机整机制造")]
+          "6242* 外卖送餐服务8010* 家庭服务" -> [("6242", True, "6242* 外卖送餐服务"), ("8010", True, "8010* 家庭服务")]
+          "1491* 营养食品制造" -> [("1491", True, "1491* 营养食品制造")]
     """
     results = []
     if not code_str:
         return results
 
-    # 匹配4位数字，后面可能跟*或空格
-    pattern = rf'(\d{{{LEVEL4_CODE_LENGTH}}})(\*?)'
+    # 匹配4位数字 + *（可选） + 后续内容（到下一个4位数字或字符串结尾）
+    pattern = rf'(\d{{{LEVEL4_CODE_LENGTH}}})(\*)?([^\d]*?)(?=\d{{{LEVEL4_CODE_LENGTH}}}|$)'
     matches = re.findall(pattern, code_str)
+
     for match in matches:
         code_4d = match[0]
         has_star = match[1] == '*'
-        original = code_4d + ('*' if has_star else '')
+        rest = match[2].strip()
+
+        if has_star:
+            original = f'{code_4d}* {rest}' if rest else f'{code_4d}*'
+        else:
+            original = f'{code_4d} {rest}' if rest else code_4d
+
         results.append((code_4d, has_star, original))
 
     return results

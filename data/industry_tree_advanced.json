@@ -379,7 +379,7 @@
                   ],
                   "tagDetail": {
                     "digital": {
-                      "description": "0211*",
+                      "description": "0211* 林木育种",
                       "industry": "数字化效率提升业"
                     }
                   }
@@ -395,7 +395,7 @@
                   ],
                   "tagDetail": {
                     "digital": {
-                      "description": "0212*",
+                      "description": "0212* 林木育苗",
                       "industry": "数字化效率提升业"
                     }
                   }
@@ -748,7 +748,7 @@
                   ],
                   "tagDetail": {
                     "digital": {
-                      "description": "0511*",
+                      "description": "0511* 种子种苗培育活动",
                       "industry": "数字化效率提升业"
                     }
                   }
@@ -875,7 +875,7 @@
                   ],
                   "tagDetail": {
                     "digital": {
-                      "description": "0531*",
+                      "description": "0531* 畜牧良种繁殖活动",
                       "industry": "数字化效率提升业"
                     }
                   }
@@ -931,7 +931,7 @@
                   ],
                   "tagDetail": {
                     "digital": {
-                      "description": "0541*",
+                      "description": "0541* 鱼苗及鱼种场活动",
                       "industry": "数字化效率提升业"
                     }
                   }
@@ -2143,7 +2143,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "1491*",
+                      "description": "1491* 营养食品制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -2159,7 +2159,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "1492*",
+                      "description": "1492* 保健食品制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -2764,7 +2764,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "1819*",
+                      "description": "1819* 其他机织服装制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -2797,7 +2797,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "1829*",
+                      "description": "1829* 其他针织或钩针编织服装制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -2821,7 +2821,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "1830*",
+                      "description": "1830* 服饰制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -3186,7 +3186,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "2041*",
+                      "description": "2041* 竹制品制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -3470,7 +3470,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "2319*",
+                      "description": "2319* 包装装潢及其他印刷",
                       "industry": "老年用品及相关产品制造"
                     },
                     "culture": {}
@@ -3797,7 +3797,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "2441*",
+                      "description": "2441* 球类制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -3822,7 +3822,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "2443*",
+                      "description": "2443* 健身器材制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -3847,7 +3847,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "2449*",
+                      "description": "2449* 其他体育用品制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -3934,7 +3934,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "2459*",
+                      "description": "2459* 其他玩具制造",
                       "industry": "老年用品及相关产品制造"
                     },
                     "culture": {}
@@ -3974,11 +3974,11 @@
                   ],
                   "tagDetail": {
                     "digital": {
-                      "description": "2462*",
+                      "description": "2462* 游艺用品及室内游艺器材制造",
                       "industry": "数字产品制造业"
                     },
                     "pension": {
-                      "description": "2462*",
+                      "description": "2462* 游艺用品及室内游艺器材制造",
                       "industry": "老年用品及相关产品制造"
                     },
                     "culture": {}
@@ -4807,7 +4807,7 @@
                     "ip密集型": {},
                     "strategic": {},
                     "pension": {
-                      "description": "2710*",
+                      "description": "2710* 化学药品原料药制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -4837,7 +4837,7 @@
                     "ip密集型": {},
                     "strategic": {},
                     "pension": {
-                      "description": "2720*",
+                      "description": "2720* 化学药品制剂制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -4867,7 +4867,7 @@
                     "ip密集型": {},
                     "strategic": {},
                     "pension": {
-                      "description": "2730*",
+                      "description": "2730* 中药饮片加工",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -4897,7 +4897,7 @@
                     "ip密集型": {},
                     "strategic": {},
                     "pension": {
-                      "description": "2740*",
+                      "description": "2740* 中成药生产",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -8482,7 +8482,7 @@
                     "ip密集型": {},
                     "strategic": {},
                     "pension": {
-                      "description": "3585*",
+                      "description": "3585* 机械治疗及病房护理设备制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -8504,7 +8504,7 @@
                     "ip密集型": {},
                     "strategic": {},
                     "pension": {
-                      "description": "3586*",
+                      "description": "3586* 康复辅具制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -8520,7 +8520,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "3587*",
+                      "description": "3587* 眼镜制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -8542,7 +8542,7 @@
                     "ip密集型": {},
                     "strategic": {},
                     "pension": {
-                      "description": "3589*",
+                      "description": "3589* 其他医疗设备及器械制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -9212,7 +9212,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "3762*",
+                      "description": "3762* 残疾人座车制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -9236,7 +9236,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "3770*",
+                      "description": "3770* 助动车制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -9511,7 +9511,7 @@
                       "industry": "节能环保产业"
                     },
                     "digital": {
-                      "description": "3831*",
+                      "description": "3831* 电线、电缆制造",
                       "industry": "数字产品制造业"
                     }
                   }
@@ -9772,7 +9772,7 @@
                       "industry": "节能环保产业"
                     },
                     "pension": {
-                      "description": "3856*",
+                      "description": "3856* 家用美容、保健护理电器具制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -10173,7 +10173,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "3922*",
+                      "description": "3922* 通信终端设备制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -10426,7 +10426,7 @@
                     "strategic": {},
                     "digital": {},
                     "pension": {
-                      "description": "3961*",
+                      "description": "3961* 可穿戴智能设备制造",
                       "industry": "老年用品及相关产品制造"
                     },
                     "culture": {
@@ -10493,7 +10493,7 @@
                     "strategic": {},
                     "digital": {},
                     "pension": {
-                      "description": "3964*",
+                      "description": "3964* 服务消费机器人制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -10521,7 +10521,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "3969*",
+                      "description": "3969* 其他智能消费设备制造",
                       "industry": "老年用品及相关产品制造"
                     },
                     "culture": {
@@ -11288,7 +11288,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "4119*",
+                      "description": "4119* 其他日用杂品制造",
                       "industry": "老年用品及相关产品制造"
                     }
                   }
@@ -11450,7 +11450,7 @@
                       "industry": "高端装备制造产业"
                     },
                     "pension": {
-                      "description": "4330*",
+                      "description": "4330* 专用设备修理",
                       "industry": "养老设施建设"
                     }
                   }
@@ -11982,11 +11982,11 @@
                   ],
                   "tagDetail": {
                     "digital": {
-                      "description": "4790*",
+                      "description": "4790* 其他房屋建筑业",
                       "industry": "数字要素驱动业"
                     },
                     "pension": {
-                      "description": "4790*",
+                      "description": "4790* 其他房屋建筑业",
                       "industry": "养老设施建设"
                     }
                   }
@@ -12200,7 +12200,7 @@
                       "industry": "新能源产业"
                     },
                     "digital": {
-                      "description": "4851*",
+                      "description": "4851* 架线及设备工程建筑",
                       "industry": "数字要素驱动业"
                     }
                   }
@@ -12436,11 +12436,11 @@
                   ],
                   "tagDetail": {
                     "digital": {
-                      "description": "4910*",
+                      "description": "4910* 电气安装",
                       "industry": "数字要素驱动业"
                     },
                     "pension": {
-                      "description": "4910*",
+                      "description": "4910* 电气安装",
                       "industry": "养老设施建设"
                     }
                   }
@@ -12464,7 +12464,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "4920*",
+                      "description": "4920* 管道和设备安装",
                       "industry": "养老设施建设"
                     }
                   }
@@ -12498,11 +12498,11 @@
                   ],
                   "tagDetail": {
                     "digital": {
-                      "description": "4999*",
+                      "description": "4999* 其他建筑安装",
                       "industry": "数字要素驱动业"
                     },
                     "pension": {
-                      "description": "4999*",
+                      "description": "4999* 其他建筑安装",
                       "industry": "养老设施建设"
                     }
                   }
@@ -12534,7 +12534,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5011*",
+                      "description": "5011* 公共建筑装饰和装修",
                       "industry": "养老设施建设"
                     }
                   }
@@ -12550,7 +12550,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5012*",
+                      "description": "5012* 住宅装饰和装修",
                       "industry": "养老设施建设"
                     }
                   }
@@ -12566,7 +12566,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5013*",
+                      "description": "5013* 建筑幕墙装饰和装修",
                       "industry": "养老设施建设"
                     }
                   }
@@ -12791,7 +12791,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5126*",
+                      "description": "5126* 营养和保健品批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -12851,7 +12851,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5132*",
+                      "description": "5132* 服装批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -12867,7 +12867,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5133*",
+                      "description": "5133* 鞋帽批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -12911,7 +12911,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5137*",
+                      "description": "5137* 家用视听设备批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -12928,7 +12928,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5138*",
+                      "description": "5138* 日用家电批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -12944,7 +12944,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5139*",
+                      "description": "5139* 其他家庭用品批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -12991,7 +12991,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5143*",
+                      "description": "5143* 图书批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -13009,7 +13009,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5144*",
+                      "description": "5144* 报刊批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -13027,7 +13027,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5145*",
+                      "description": "5145* 音像制品、电子和数字出版物批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -13091,7 +13091,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5151*",
+                      "description": "5151* 西药批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13107,7 +13107,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5152*",
+                      "description": "5152* 中药批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13132,7 +13132,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5154*",
+                      "description": "5154* 医疗用品及器材批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13311,7 +13311,7 @@
                   "tagDetail": {
                     "digital": {},
                     "pension": {
-                      "description": "5177*",
+                      "description": "5177* 通讯设备批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13342,7 +13342,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5179*",
+                      "description": "5179* 其他机械设备及电子产品批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13453,7 +13453,7 @@
                   "tagDetail": {
                     "digital": {},
                     "pension": {
-                      "description": "5193*",
+                      "description": "5193* 互联网批发",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13503,7 +13503,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5212*",
+                      "description": "5212* 超级市场零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13581,7 +13581,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5225*",
+                      "description": "5225* 营养和保健品零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13641,7 +13641,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5232*",
+                      "description": "5232* 服装零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13657,7 +13657,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5233*",
+                      "description": "5233* 鞋帽零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13691,7 +13691,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5236*",
+                      "description": "5236* 钟表、眼镜零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13716,7 +13716,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5238*",
+                      "description": "5238* 自行车等代步设备零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13762,7 +13762,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5242*",
+                      "description": "5242* 体育用品及器材零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13779,7 +13779,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5243*",
+                      "description": "5243* 图书、报刊零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -13799,7 +13799,7 @@
                   "tagDetail": {
                     "digital": {},
                     "pension": {
-                      "description": "5244*",
+                      "description": "5244* 音像制品、电子和数字出版物零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -13843,7 +13843,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5247*",
+                      "description": "5247* 乐器零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -13874,7 +13874,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5249*",
+                      "description": "5249* 其他文化用品零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -13899,7 +13899,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5251*",
+                      "description": "5251* 西药零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13915,7 +13915,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5252*",
+                      "description": "5252* 中药零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13940,7 +13940,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5254*",
+                      "description": "5254* 医疗用品及器材零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -13956,7 +13956,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5255*",
+                      "description": "5255* 保健辅助治疗器材零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -14056,7 +14056,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5271*",
+                      "description": "5271* 家用视听设备零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -14073,7 +14073,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5272*",
+                      "description": "5272* 日用家电零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -14091,7 +14091,7 @@
                   "tagDetail": {
                     "digital": {},
                     "pension": {
-                      "description": "5273*",
+                      "description": "5273* 计算机、软件及辅助设备零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -14109,7 +14109,7 @@
                   "tagDetail": {
                     "digital": {},
                     "pension": {
-                      "description": "5274*",
+                      "description": "5274* 通信设备零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -14125,7 +14125,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "5279*",
+                      "description": "5279* 其他电子产品零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -14240,7 +14240,7 @@
                   "tagDetail": {
                     "digital": {},
                     "pension": {
-                      "description": "5292*",
+                      "description": "5292* 互联网零售",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -15364,7 +15364,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6210*",
+                      "description": "6210* 正餐服务",
                       "industry": "养老照护服务"
                     }
                   }
@@ -15388,7 +15388,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6220*",
+                      "description": "6220* 快餐服务",
                       "industry": "养老照护服务"
                     }
                   }
@@ -15456,7 +15456,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6241*",
+                      "description": "6241* 餐饮配送服务",
                       "industry": "养老照护服务"
                     }
                   }
@@ -15472,7 +15472,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6242*",
+                      "description": "6242* 外卖送餐服务",
                       "industry": "养老照护服务"
                     }
                   }
@@ -15505,7 +15505,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6299*",
+                      "description": "6299* 其他未列明餐饮业",
                       "industry": "养老照护服务"
                     }
                   }
@@ -15803,7 +15803,7 @@
                       "industry": "数字创意产业"
                     },
                     "digital": {
-                      "description": "6429*",
+                      "description": "6429* 互联网其他信息服务",
                       "industry": "数字技术应用业"
                     },
                     "culture": {}
@@ -15859,7 +15859,7 @@
                     "strategic": {},
                     "digital": {},
                     "pension": {
-                      "description": "6432*",
+                      "description": "6432* 互联网生活服务平台",
                       "industry": "养老科技和智慧养老服务"
                     },
                     "culture": {
@@ -15905,7 +15905,7 @@
                     "strategic": {},
                     "digital": {},
                     "pension": {
-                      "description": "6434*",
+                      "description": "6434* 互联网公共服务平台",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -15986,7 +15986,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "6450*",
+                      "description": "6450* 互联网数据服务",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -16152,7 +16152,7 @@
                     "strategic": {},
                     "digital": {},
                     "pension": {
-                      "description": "6520*",
+                      "description": "6520* 集成电路设计",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -16185,7 +16185,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "6531*",
+                      "description": "6531* 信息系统集成服务",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -16210,7 +16210,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "6532*",
+                      "description": "6532* 物联网技术服务",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -16243,7 +16243,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "6540*",
+                      "description": "6540* 运行维护服务",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -16278,7 +16278,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "6550*",
+                      "description": "6550* 信息处理和存储支持服务",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -16311,7 +16311,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "6560*",
+                      "description": "6560* 信息技术咨询服务",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -16390,7 +16390,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "6579*",
+                      "description": "6579* 其他数字内容服务",
                       "industry": "养老科技和智慧养老服务"
                     },
                     "culture": {
@@ -16627,7 +16627,7 @@
                       "industry": "相关服务业"
                     },
                     "pension": {
-                      "description": "6639*",
+                      "description": "6639* 其他非货币银行服务",
                       "industry": "养老金融服务"
                     }
                   }
@@ -16651,7 +16651,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6640*",
+                      "description": "6640* 银行理财服务",
                       "industry": "养老金融服务"
                     }
                   }
@@ -16728,7 +16728,7 @@
                   "tagDetail": {
                     "strategic": {},
                     "pension": {
-                      "description": "6720*",
+                      "description": "6720* 公开募集证券投资基金",
                       "industry": "养老金融服务"
                     }
                   }
@@ -16780,7 +16780,7 @@
                   "tagDetail": {
                     "strategic": {},
                     "pension": {
-                      "description": "6739*",
+                      "description": "6739* 其他非公开募集证券投资基金",
                       "industry": "养老金融服务"
                     }
                   }
@@ -16847,7 +16847,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6760*",
+                      "description": "6760* 资本投资服务",
                       "industry": "养老金融服务"
                     }
                   }
@@ -16876,7 +16876,7 @@
                       "industry": "相关服务业"
                     },
                     "pension": {
-                      "description": "6790*",
+                      "description": "6790* 其他资本市场服务",
                       "industry": "养老金融服务"
                     }
                   }
@@ -16908,7 +16908,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6811*",
+                      "description": "6811* 人寿保险",
                       "industry": "养老金融服务"
                     }
                   }
@@ -16937,7 +16937,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6813*",
+                      "description": "6813* 健康保险",
                       "industry": "养老金融服务"
                     }
                   }
@@ -16953,7 +16953,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6814*",
+                      "description": "6814* 意外伤害保险",
                       "industry": "养老金融服务"
                     }
                   }
@@ -16982,7 +16982,7 @@
                       "industry": "相关服务业"
                     },
                     "pension": {
-                      "description": "6820*",
+                      "description": "6820* 财产保险",
                       "industry": "养老金融服务"
                     }
                   }
@@ -17006,7 +17006,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6830*",
+                      "description": "6830* 再保险",
                       "industry": "养老金融服务"
                     }
                   }
@@ -17086,7 +17086,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6860*",
+                      "description": "6860* 保险资产管理",
                       "industry": "养老金融服务"
                     }
                   }
@@ -17110,7 +17110,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6870*",
+                      "description": "6870* 保险监管服务",
                       "industry": "养老金融服务"
                     }
                   }
@@ -17134,7 +17134,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6890*",
+                      "description": "6890* 其他保险活动",
                       "industry": "养老金融服务"
                     }
                   }
@@ -17166,7 +17166,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "6911*",
+                      "description": "6911* 信托公司",
                       "industry": "养老金融服务"
                     }
                   }
@@ -17480,7 +17480,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "7115*",
+                      "description": "7115* 医疗设备经营租赁",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -17514,7 +17514,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "7121*",
+                      "description": "7121* 休闲娱乐用品设备出租",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -17531,7 +17531,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "7122*",
+                      "description": "7122* 体育用品设备出租",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -17548,7 +17548,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "7123*",
+                      "description": "7123* 文化用品设备出租",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -17566,7 +17566,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "7124*",
+                      "description": "7124* 图书出租",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -17586,7 +17586,7 @@
                   "tagDetail": {
                     "digital": {},
                     "pension": {
-                      "description": "7125*",
+                      "description": "7125* 音像制品出租",
                       "industry": "老年用品及相关产品销售和租赁"
                     },
                     "culture": {}
@@ -17603,7 +17603,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "7129*",
+                      "description": "7129* 其他文体设备和用品出租",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -17627,7 +17627,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "7130*",
+                      "description": "7130* 日用品出租",
                       "industry": "老年用品及相关产品销售和租赁"
                     }
                   }
@@ -17694,7 +17694,7 @@
                       "industry": "节能环保产业"
                     },
                     "digital": {
-                      "description": "7213*",
+                      "description": "7213* 资源与产权交易服务",
                       "industry": "数字要素驱动业"
                     }
                   }
@@ -17817,7 +17817,7 @@
                       "industry": "相关服务业"
                     },
                     "pension": {
-                      "description": "7231*",
+                      "description": "7231* 律师及相关法律服务",
                       "industry": "其他养老服务"
                     }
                   }
@@ -17833,7 +17833,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "7232*",
+                      "description": "7232* 公证服务",
                       "industry": "其他养老服务"
                     }
                   }
@@ -17858,7 +17858,7 @@
                       "industry": "节能环保产业"
                     },
                     "pension": {
-                      "description": "7239*",
+                      "description": "7239* 其他法律服务",
                       "industry": "其他养老服务"
                     }
                   }
@@ -17916,7 +17916,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "7244*",
+                      "description": "7244* 健康咨询",
                       "industry": "老年健康促进与社会参与"
                     }
                   }
@@ -18061,7 +18061,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "7269*",
+                      "description": "7269* 其他人力资源服务",
                       "industry": "养老教育培训和人力资源服务"
                     }
                   }
@@ -18180,7 +18180,7 @@
                       "industry": "数字创意产业"
                     },
                     "pension": {
-                      "description": "7284*",
+                      "description": "7284* 文化会展服务",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -18198,7 +18198,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "7289*",
+                      "description": "7289* 其他会议、展览及相关服务",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -18228,7 +18228,7 @@
                       "industry": "数字创意产业"
                     },
                     "pension": {
-                      "description": "7291*",
+                      "description": "7291* 旅行社及相关服务",
                       "industry": "老年健康促进与社会参与"
                     }
                   }
@@ -18317,7 +18317,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "7299*",
+                      "description": "7299* 其他未列明商务服务业",
                       "industry": "其他养老服务"
                     }
                   }
@@ -18395,11 +18395,11 @@
                       "industry": "相关服务业"
                     },
                     "digital": {
-                      "description": "7320*",
+                      "description": "7320* 工程和技术研究和试验发展",
                       "industry": "数字要素驱动业"
                     },
                     "pension": {
-                      "description": "7320*",
+                      "description": "7320* 工程和技术研究和试验发展",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -18458,7 +18458,7 @@
                       "industry": "相关服务业"
                     },
                     "pension": {
-                      "description": "7340*",
+                      "description": "7340* 医学研究和试验发展",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -18485,7 +18485,7 @@
                   "tagDetail": {
                     "strategic": {},
                     "pension": {
-                      "description": "7350*",
+                      "description": "7350* 社会人文科学研究",
                       "industry": "养老科技和智慧养老服务"
                     },
                     "culture": {}
@@ -19154,7 +19154,7 @@
                       "industry": "生物产业"
                     },
                     "pension": {
-                      "description": "7512*",
+                      "description": "7512* 生物技术推广服务",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -19239,14 +19239,12 @@
                   "tags": [
                     "highTech_svc",
                     "ip密集型",
-                    "strategic",
-                    "digital"
+                    "strategic"
                   ],
                   "tagDetail": {
                     "highTech_svc": {},
                     "ip密集型": {},
-                    "strategic": {},
-                    "digital": {}
+                    "strategic": {}
                   }
                 },
                 {
@@ -19293,7 +19291,7 @@
                     "highTech_svc": {},
                     "strategic": {},
                     "pension": {
-                      "description": "7520*",
+                      "description": "7520* 知识产权服务",
                       "industry": "养老科技和智慧养老服务"
                     },
                     "culture": {
@@ -19327,7 +19325,7 @@
                       "industry": "相关服务业"
                     },
                     "pension": {
-                      "description": "7530*",
+                      "description": "7530* 科技中介服务",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -19355,7 +19353,7 @@
                     "highTech_svc": {},
                     "strategic": {},
                     "pension": {
-                      "description": "7540*",
+                      "description": "7540* 创业空间服务",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -19381,7 +19379,7 @@
                   "tagDetail": {
                     "highTech_svc": {},
                     "pension": {
-                      "description": "7590*",
+                      "description": "7590* 其他科技推广服务业",
                       "industry": "养老科技和智慧养老服务"
                     }
                   }
@@ -20018,7 +20016,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8010*",
+                      "description": "8010* 家庭服务",
                       "industry": "养老照护服务"
                     }
                   }
@@ -20076,7 +20074,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8040*",
+                      "description": "8040* 理发及美容服务",
                       "industry": "老年健康促进与社会参与"
                     }
                   }
@@ -20100,7 +20098,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8051*",
+                      "description": "8051* 洗浴服务",
                       "industry": "老年健康促进与社会参与"
                     }
                   }
@@ -20116,7 +20114,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8052*",
+                      "description": "8052* 足浴服务",
                       "industry": "老年健康促进与社会参与"
                     }
                   }
@@ -20132,7 +20130,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8053*",
+                      "description": "8053* 养生保健服务",
                       "industry": "老年健康促进与社会参与"
                     }
                   }
@@ -20178,7 +20176,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8070*",
+                      "description": "8070* 婚姻服务",
                       "industry": "其他养老服务"
                     },
                     "culture": {
@@ -20222,7 +20220,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8090*",
+                      "description": "8090* 其他居民服务业",
                       "industry": "其他养老服务"
                     }
                   }
@@ -20437,7 +20435,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8219*",
+                      "description": "8219* 其他清洁服务",
                       "industry": "养老照护服务"
                     }
                   }
@@ -20635,7 +20633,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8336*",
+                      "description": "8336* 中等职业学校教育",
                       "industry": "养老教育培训和人力资源服务"
                     }
                   }
@@ -20707,7 +20705,7 @@
                       "industry": "相关服务业"
                     },
                     "pension": {
-                      "description": "8391*",
+                      "description": "8391* 职业技能培训",
                       "industry": "养老教育培训和人力资源服务"
                     }
                   }
@@ -20755,7 +20753,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8399*",
+                      "description": "8399* 其他未列明教育",
                       "industry": "养老教育培训和人力资源服务"
                     },
                     "culture": {
@@ -20798,7 +20796,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8411*",
+                      "description": "8411* 综合医院",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -20814,7 +20812,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8412*",
+                      "description": "8412* 中医医院",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -20830,7 +20828,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8413*",
+                      "description": "8413* 中西医结合医院",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -20846,7 +20844,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8414*",
+                      "description": "8414* 民族医院",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -20867,7 +20865,7 @@
                       "industry": "生物产业"
                     },
                     "pension": {
-                      "description": "8415*",
+                      "description": "8415* 专科医院",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -20883,7 +20881,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8416*",
+                      "description": "8416* 疗养院",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -20912,7 +20910,7 @@
                       "industry": "生物产业"
                     },
                     "pension": {
-                      "description": "8421*",
+                      "description": "8421* 社区卫生服务中心（站）",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -20928,7 +20926,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8422*",
+                      "description": "8422* 街道卫生院",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -20944,7 +20942,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8423*",
+                      "description": "8423* 乡镇卫生院",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -20960,7 +20958,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8424*",
+                      "description": "8424* 村卫生室",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -20976,7 +20974,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8425*",
+                      "description": "8425* 门诊部（所）",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -21000,7 +20998,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8431*",
+                      "description": "8431* 疾病预防控制中心",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -21016,7 +21014,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8432*",
+                      "description": "8432* 专科疾病防治院（所、站）",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -21041,7 +21039,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8434*",
+                      "description": "8434* 急救中心（站）服务",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -21088,7 +21086,7 @@
                       "industry": "生物产业"
                     },
                     "pension": {
-                      "description": "8491*",
+                      "description": "8491* 健康体检服务",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -21109,7 +21107,7 @@
                       "industry": "生物产业"
                     },
                     "pension": {
-                      "description": "8492*",
+                      "description": "8492* 临床检验服务",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -21125,7 +21123,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8499*",
+                      "description": "8499* 其他未列明卫生服务",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -21157,7 +21155,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8511*",
+                      "description": "8511* 干部休养所",
                       "industry": "养老照护服务"
                     }
                   }
@@ -21173,7 +21171,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8512*",
+                      "description": "8512* 护理机构服务",
                       "industry": "养老照护服务"
                     }
                   }
@@ -21189,7 +21187,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8513*",
+                      "description": "8513* 精神康复服务",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -21205,7 +21203,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8514*",
+                      "description": "8514* 老年人、残疾人养护服务",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -21221,7 +21219,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8515*",
+                      "description": "8515* 临终关怀服务",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -21246,7 +21244,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8519*",
+                      "description": "8519* 其他提供住宿社会救助",
                       "industry": "老年社会保障"
                     }
                   }
@@ -21270,7 +21268,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8521*",
+                      "description": "8521* 社会看护与帮助服务",
                       "industry": "老年社会保障"
                     }
                   }
@@ -21286,7 +21284,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8522*",
+                      "description": "8522* 康复辅具适配服务",
                       "industry": "老年医疗卫生服务"
                     }
                   }
@@ -21302,7 +21300,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8529*",
+                      "description": "8529* 其他不提供住宿社会工作",
                       "industry": "老年社会保障"
                     }
                   }
@@ -21344,11 +21342,11 @@
                   ],
                   "tagDetail": {
                     "digital": {
-                      "description": "8610*",
+                      "description": "8610* 新闻业",
                       "industry": "数字技术应用业"
                     },
                     "pension": {
-                      "description": "8610*",
+                      "description": "8610* 新闻业",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -21374,7 +21372,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8621*",
+                      "description": "8621* 图书出版",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -21392,7 +21390,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8622*",
+                      "description": "8622* 报纸出版",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -21410,7 +21408,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8623*",
+                      "description": "8623* 期刊出版",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -21430,7 +21428,7 @@
                   "tagDetail": {
                     "digital": {},
                     "pension": {
-                      "description": "8624*",
+                      "description": "8624* 音像制品出版",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -21457,7 +21455,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "8625*",
+                      "description": "8625* 电子出版物出版",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -21481,7 +21479,7 @@
                     "strategic": {},
                     "digital": {},
                     "pension": {
-                      "description": "8626*",
+                      "description": "8626* 数字出版",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -21539,7 +21537,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "8710*",
+                      "description": "8710* 广播",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -21576,7 +21574,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "8720*",
+                      "description": "8720* 电视",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -21609,7 +21607,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "8730*",
+                      "description": "8730* 影视节目制作",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -21644,7 +21642,7 @@
                     },
                     "digital": {},
                     "pension": {
-                      "description": "8740*",
+                      "description": "8740* 广播电视集成播控",
                       "industry": "其他养老服务"
                     },
                     "culture": {}
@@ -21809,7 +21807,7 @@
                       "industry": "数字创意产业"
                     },
                     "pension": {
-                      "description": "8831*",
+                      "description": "8831* 图书馆",
                       "industry": "老年健康促进与社会参与"
                     },
                     "culture": {}
@@ -21874,7 +21872,7 @@
                       "industry": "数字创意产业"
                     },
                     "pension": {
-                      "description": "8850*",
+                      "description": "8850* 博物馆",
                       "industry": "老年健康促进与社会参与"
                     },
                     "culture": {}
@@ -21921,7 +21919,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8870*",
+                      "description": "8870* 群众文体活动",
                       "industry": "老年健康促进与社会参与"
                     },
                     "culture": {}
@@ -21997,7 +21995,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8919*",
+                      "description": "8919* 其他体育组织",
                       "industry": "老年健康促进与社会参与"
                     }
                   }
@@ -22047,7 +22045,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8930*",
+                      "description": "8930* 健身休闲活动",
                       "industry": "老年健康促进与社会参与"
                     }
                   }
@@ -22080,7 +22078,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "8992*",
+                      "description": "8992* 体育健康服务",
                       "industry": "老年健康促进与社会参与"
                     }
                   }
@@ -22122,7 +22120,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9011*",
+                      "description": "9011* 歌舞厅娱乐活动",
                       "industry": "老年健康促进与社会参与"
                     },
                     "culture": {}
@@ -22166,7 +22164,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9019*",
+                      "description": "9019* 其他室内娱乐活动",
                       "industry": "老年健康促进与社会参与"
                     },
                     "culture": {}
@@ -22192,7 +22190,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9020*",
+                      "description": "9020* 游乐园",
                       "industry": "老年健康促进与社会参与"
                     },
                     "culture": {}
@@ -22247,7 +22245,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9042*",
+                      "description": "9042* 福利彩票服务",
                       "industry": "老年社会保障"
                     }
                   }
@@ -22293,7 +22291,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9052*",
+                      "description": "9052* 体育表演服务",
                       "industry": "老年健康促进与社会参与"
                     }
                   }
@@ -22431,7 +22429,7 @@
                   ],
                   "tagDetail": {
                     "digital": {
-                      "description": "9221*",
+                      "description": "9221* 综合事务管理机构",
                       "industry": "数字化效率提升业"
                     }
                   }
@@ -22465,7 +22463,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9224*",
+                      "description": "9224* 社会事务管理机构",
                       "industry": "养老公共管理"
                     }
                   }
@@ -22481,7 +22479,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9225*",
+                      "description": "9225* 经济事务管理机构",
                       "industry": "养老公共管理"
                     }
                   }
@@ -22497,7 +22495,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9226*",
+                      "description": "9226* 行政监督检查机构",
                       "industry": "养老公共管理"
                     }
                   }
@@ -22645,7 +22643,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9412*",
+                      "description": "9412* 基本医疗保险",
                       "industry": "老年社会保障"
                     }
                   }
@@ -22688,7 +22686,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9419*",
+                      "description": "9419* 其他基本保险",
                       "industry": "老年社会保障"
                     }
                   }
@@ -22712,7 +22710,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9420*",
+                      "description": "9420* 补充保险",
                       "industry": "老年社会保障"
                     }
                   }
@@ -22736,7 +22734,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9490*",
+                      "description": "9490* 其他社会保障",
                       "industry": "老年社会保障"
                     }
                   }
@@ -22853,7 +22851,7 @@
                   ],
                   "tagDetail": {
                     "pension": {
-                      "description": "9530*",
+                      "description": "9530* 基金会",
                       "industry": "养老公共管理"
                     }
                   }
