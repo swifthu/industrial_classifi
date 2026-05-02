@@ -431,6 +431,143 @@
     .theme-toggle:hover::before {
       opacity: 1;
     }
+
+    /* 增强模式按钮 */
+    .enhanced-toggle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .enhanced-toggle:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.1);
+    }
+
+    .enhanced-toggle:active {
+      transform: scale(0.95);
+    }
+
+    .enhanced-toggle .icon {
+      position: absolute;
+      font-size: 18px;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .enhanced-toggle .off {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .enhanced-toggle .on {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    body.enhanced .enhanced-toggle .off {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    body.enhanced .enhanced-toggle .on {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* 增强模式下增强按钮颜色 */
+    body.enhanced .enhanced-toggle {
+      background: rgba(76, 175, 80, 0.3);
+      border-color: rgba(76, 175, 80, 0.6);
+    }
+
+    body.enhanced .enhanced-toggle:hover {
+      background: rgba(76, 175, 80, 0.4);
+    }
+
+    /* 标签样式 */
+    .tag-badge {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background-color: #FFF8E1;
+      color: #795548;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    body.dark .tag-badge {
+      background-color: #5D4C3A;
+      color: #FFE082;
+    }
+
+    .tag-badge.has-detail {
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: 2px;
+    }
+
+    .tag-badge.has-detail:hover {
+      background-color: #FFECB3;
+    }
+
+    body.dark .tag-badge.has-detail:hover {
+      background-color: #6D5C4A;
+    }
+
+    /* 标签容器 */
+    .tags-container {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-left: 8px;
+    }
+
+    /* 浮窗样式 */
+    .tag-popup {
+      position: fixed;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px 14px;
+      box-shadow: 0 4px 12px var(--shadow);
+      z-index: 1000;
+      max-width: 280px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-primary);
+      display: none;
+    }
+
+    .tag-popup.visible {
+      display: block;
+    }
+
+    .tag-popup .popup-title {
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+
+    .tag-popup .popup-content {
+      color: var(--text-secondary);
+    }
+
+    .tag-popup .popup-code {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
@@ -452,6 +589,10 @@
       <span class="sun">☀️</span>
       <span class="moon">🌙</span>
     </button>
+    <button class="enhanced-toggle" id="enhancedToggle" title="增强模式">
+      <span class="icon off">📎</span>
+      <span class="icon on">🔗</span>
+    </button>
   </header>
 
   <main class="main-content">
@@ -467,12 +608,24 @@
   </main>
 
   <script>
+    // 标签定义
+    const TAGS_MAP = {
+      "highTech_mfg": "高技术（制造业）",
+      "highTech_svc": "高技术（服务业）",
+      "ip密集型": "知识产权密集型产业",
+      "strategic": "战略性新兴产业",
+      "digital": "数字经济核心产业",
+      "pension": "养老产业",
+      "culture": "文化产业"
+    };
+
     // 全局数据
     let treeData = null;
     let currentHighlighted = new Set();
     let expandedNodes = new Set();
     let isSearching = false; // 标记是否处于搜索模式
     let originalTreeHTML = ''; // 保存原始树HTML
+    let isEnhancedMode = false; // 增强模式状态
 
     // DOM 元素
     const searchInput = document.getElementById('searchInput');
@@ -480,6 +633,7 @@
     const treeContent = document.getElementById('treeContent');
     const statsEl = document.getElementById('stats');
     const themeToggle = document.getElementById('themeToggle');
+    const enhancedToggle = document.getElementById('enhancedToggle');
 
     // 主题切换
     function initTheme() {
@@ -497,11 +651,32 @@
 
     themeToggle.addEventListener('click', toggleTheme);
 
+    // 增强模式切换
+    function toggleEnhancedMode() {
+      isEnhancedMode = !isEnhancedMode;
+      document.body.classList.toggle('enhanced', isEnhancedMode);
+      localStorage.setItem('enhanced', isEnhancedMode ? 'true' : 'false');
+      // 重新渲染树以应用/移除标签
+      reloadTree();
+    }
+
+    enhancedToggle.addEventListener('click', toggleEnhancedMode);
+
+    function initEnhancedMode() {
+      const savedEnhanced = localStorage.getItem('enhanced');
+      if (savedEnhanced === 'true') {
+        isEnhancedMode = true;
+        document.body.classList.add('enhanced');
+      }
+    }
+
     // 初始化
     async function init() {
       initTheme(); // 初始化主题
+      initEnhancedMode(); // 初始化增强模式
       try {
-        const response = await fetch('./data/industry_tree.json');
+        const dataFile = isEnhancedMode ? './data/industry_tree_advanced.json' : './data/industry_tree_basic.json';
+        const response = await fetch(dataFile);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -530,6 +705,20 @@
         `;
         console.error('数据加载失败:', error);
       }
+    }
+
+    // 重新加载树
+    function reloadTree() {
+      treeContent.innerHTML = `
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <div>加载中...</div>
+        </div>
+      `;
+      originalTreeHTML = '';
+      expandedNodes.clear();
+      currentHighlighted.clear();
+      init();
     }
 
         function renderTree(node, container, shouldExpand = false, menleiLetter = '') {
@@ -579,6 +768,26 @@
       nameSpan.className = 'node-name';
       nameSpan.textContent = node.name;
       content.appendChild(nameSpan);
+
+      // 增强模式：四级节点显示标签
+      if (isEnhancedMode && isLevel4 && node.tags && node.tags.length > 0) {
+        const tagsContainer = document.createElement('span');
+        tagsContainer.className = 'tags-container';
+        node.tags.forEach(tag => {
+          const tagBadge = document.createElement('span');
+          tagBadge.className = 'tag-badge';
+          const tagDetail = node.tagDetail && node.tagDetail[tag];
+          if (tagDetail) {
+            tagBadge.classList.add('has-detail');
+            tagBadge.dataset.description = tagDetail.description || '';
+            tagBadge.dataset.industry = tagDetail.industry || '';
+            tagBadge.addEventListener('click', showTagPopup);
+          }
+          tagBadge.textContent = TAGS_MAP[tag] || tag;
+          tagsContainer.appendChild(tagBadge);
+        });
+        content.appendChild(tagsContainer);
+      }
 
       nodeWrapper.appendChild(content);
 
@@ -646,6 +855,73 @@
         expandedNodes.add(code);
       }
     }
+
+    // 浮窗显示函数
+    let currentPopup = null;
+
+    function showTagPopup(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      // 关闭现有浮窗
+      closeTagPopup();
+
+      const badge = e.target;
+      const description = badge.dataset.description;
+      const industry = badge.dataset.industry;
+
+      const popup = document.createElement('div');
+      popup.className = 'tag-popup';
+      popup.innerHTML = `
+        <div class="popup-title">${industry || ''}</div>
+        <div class="popup-content">${description || ''}</div>
+      `;
+
+      document.body.appendChild(popup);
+      currentPopup = popup;
+
+      // 计算浮窗位置
+      const rect = badge.getBoundingClientRect();
+      const popupRect = popup.getBoundingClientRect();
+
+      let left = rect.left;
+      let top = rect.bottom + 5;
+
+      // 确保浮窗不超出右边界
+      if (left + popupRect.width > window.innerWidth - 10) {
+        left = window.innerWidth - popupRect.width - 10;
+      }
+      // 确保浮窗不超出左边界
+      if (left < 10) {
+        left = 10;
+      }
+      // 检测下边界
+      if (top + popupRect.height > window.innerHeight - 10) {
+        top = rect.top - popupRect.height - 5;
+      }
+
+      popup.style.left = left + 'px';
+      popup.style.top = top + 'px';
+
+      // 延迟显示以应用过渡效果
+      setTimeout(() => {
+        popup.classList.add('visible');
+      }, 10);
+    }
+
+    function closeTagPopup() {
+      if (currentPopup) {
+        currentPopup.remove();
+        currentPopup = null;
+      }
+    }
+
+    // 点击外部关闭浮窗
+    document.addEventListener('click', (e) => {
+      if (currentPopup && !currentPopup.contains(e.target) && !e.target.classList.contains('tag-badge')) {
+        closeTagPopup();
+      }
+    });
 
     // 切换详细说明显示
     function toggleDescription(code) {
