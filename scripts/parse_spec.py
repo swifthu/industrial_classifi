@@ -206,8 +206,12 @@ def _enrich_strategic_details(tag_mapping):
                 if current_code not in code_details:
                     code_details[current_code] = []
 
-        # 如果C列为空且E列有值，添加到当前代码的列表
-        if current_code and not c_val and e_val and str(e_val).strip():
+                # 如果同一行E列也有内容（第一个产品），也要添加
+                if e_val and str(e_val).strip():
+                    code_details[current_code].append(str(e_val).strip())
+
+        # 如果C列为空但E列有值，添加到当前代码的列表（后续产品）
+        elif current_code and e_val and str(e_val).strip():
             code_details[current_code].append(str(e_val).strip())
 
     wb.close()
