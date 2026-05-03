@@ -932,11 +932,11 @@
 
       const isStrategic = tagKey === 'strategic';
 
-      if (isStrategic && categoriesData.length > 0) {
+      if (isStrategic && categoriesList.length > 0) {
         // strategic标签有新结构 categories: [{path, products}, ...]
         let contentHtml = '';
 
-        categoriesData.forEach((catData, idx) => {
+        categoriesList.forEach((catData, idx) => {
           const catPath = catData.path || category;
           const catProducts = catData.products || [];
 
@@ -960,7 +960,7 @@
         popup = document.createElement('div');
         popup.className = 'tag-popup has-detail';
         popup.innerHTML = contentHtml;
-      } else if (isStrategic && !categoriesData.length) {
+      } else if (isStrategic && categoriesList.length === 0) {
         // strategic标签但没有新结构，使用旧的单分类逻辑
         const parts = category ? category.split(' > ') : [];
         const lines = parts.map((c, i) => {
