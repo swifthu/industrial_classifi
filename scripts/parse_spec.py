@@ -109,19 +109,37 @@ def build_strategic_products_mapping():
     ws = wb[STRATEGIC_PRODUCTS_SHEET]
     code_products = {}
     current_code = None
+    current_mid_cat = None  # 追踪当前中类（用于区分同一代码在不同中类下）
 
     for row in ws.iter_rows(min_row=4, values_only=True):
+        col_a = row[0]  # 大类/中类代码
+        col_b = row[1]  # 大类/中类名称
         col_c = row[STRATEGIC_PRODUCTS_CODE_COL]
         col_e = row[STRATEGIC_PRODUCTS_COL]
+
+        # 更新当前中类（当A列是纯数字如1.1时表示中类）
+        if col_a is not None and col_b:
+            a_str = str(col_a).strip()
+            # 如果是如 "1.1" 的格式，表示中类
+            if '.' in a_str and a_str.replace('.', '').isdigit():
+                current_mid_cat = col_b
+            else:
+                # 大类，只更新大类名
+                current_mid_cat = None  # 重置中类
 
         if col_c and str(col_c).strip():
             code_str = str(col_c).strip()
             if code_str.endswith('*'):
                 current_code = code_str
-                code_products[current_code] = []
+                # 使用 (code, 中类名) 作为key，同代码在不同中类下分开存储
+                key = (current_code, current_mid_cat)
+                if key not in code_products:
+                    code_products[key] = []
 
         if current_code and col_e and str(col_e).strip():
-            code_products[current_code].append(str(col_e).strip())
+            key = (current_code, current_mid_cat)
+            if key in code_products:
+                code_products[key].append(str(col_e).strip())
 
     wb.close()
     return code_products
@@ -339,16 +357,23 @@ def build_tag_mapping():
 
                 # 对于战略性新兴产业，同一个代码可能在不同分类中出现多次，需要收集所有分类
                 if tag_key == "strategic" and code_4d in tag_mapping and "strategic" in tag_mapping[code_4d]:
-                    # 已有记录，收集多个分类
+                    # 已有记录，收集多个分类和products
                     existing = tag_mapping[code_4d]["strategic"]
                     if "categories" not in existing:
-                        existing["categories"] = [existing.get("category", "")] if existing.get("category") else []
+                        existing["categories"] = []
+
                     cat = " > ".join(filter(None, category_path))
-                    if cat and cat not in existing["categories"]:
-                        existing["categories"].append(cat)
-                    # description只保留第一个有description的
-                    if description and not existing.get("description"):
-                        existing["description"] = description
+                    # 获取小类名（用于匹配products sheet的key）- products sheet的key是小类名
+                    small_cat = category_path[2] if len(category_path) > 2 else ''
+                    products = strategic_products.get((original_code, small_cat), [])
+
+                    # 检查是否已存在相同路径
+                    existing_paths = [c["path"] for c in existing["categories"]]
+                    if cat and cat not in existing_paths:
+                        existing["categories"].append({
+                            "path": cat,
+                            "products": products if products else []
+                        })
                     continue
 
                 if code_4d not in tag_mapping:
@@ -361,9 +386,12 @@ def build_tag_mapping():
                         "description": description if description else ""
                     }
                     if tag_key == "strategic":
-                        products = strategic_products.get(original_code, [])
-                        if products:
-                            detail["products"] = products
+                        small_cat = category_path[2] if len(category_path) > 2 else ''
+                        products = strategic_products.get((original_code, small_cat), [])
+                        detail["categories"] = [{
+                            "path": " > ".join(filter(None, category_path)),
+                            "products": products if products else []
+                        }]
                     tag_mapping[code_4d][tag_key] = detail
                 else:
                     tag_mapping[code_4d][tag_key] = {
