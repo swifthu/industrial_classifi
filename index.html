@@ -905,7 +905,6 @@
     function showTagPopup(e) {
       e.stopPropagation();
       e.preventDefault();
-      console.log('showTagPopup called', e.target);
 
       // 关闭现有浮窗
       closeTagPopup();
@@ -940,13 +939,17 @@
         });
         categoryLines = lines.join('');
 
-        // products用米黄色背景显示
+        // products用米黄色背景显示，如果没有products则显示"涵盖本行业所有类目"
         let productsHtml = '';
         if (productsJson) {
           const products = JSON.parse(productsJson);
           if (products.length > 0) {
             productsHtml = `<div class="popup-content">产品：${products.join('、')}</div>`;
+          } else {
+            productsHtml = `<div class="popup-content">涵盖本行业所有类目</div>`;
           }
+        } else {
+          productsHtml = `<div class="popup-content">涵盖本行业所有类目</div>`;
         }
 
         popup = document.createElement('div');

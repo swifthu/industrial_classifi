@@ -52,6 +52,19 @@ STRATEGIC_PRODUCTS_CODE_COL = 2
 STRATEGIC_PRODUCTS_COL = 4
 
 
+def get_merged_cell_value(ws, row, col):
+    """获取合并单元格的值，正确处理跨行合并的情况"""
+    cell = ws.cell(row=row, column=col)
+    if cell.value is not None:
+        return cell.value
+    # 检查是否是合并单元格，如果是则获取其范围
+    for merged_range in ws.merged_cells.ranges:
+        if merged_range.min_row <= row <= merged_range.max_row and merged_range.min_col <= col <= merged_range.max_col:
+            # 返回合并范围的起始单元格的值
+            return ws.cell(row=merged_range.min_row, column=merged_range.min_col).value
+    return None
+
+
 def load_base_data():
     try:
         with open(BASE_DATA_FILE, "r", encoding="utf-8") as f:
@@ -221,7 +234,7 @@ def build_tag_mapping():
         is_strategic = (tag_key == "strategic")
         is_ip = (tag_key == "ip密集型")
 
-        for row in ws.iter_rows(min_row=min_row, values_only=True):
+        for row_idx, row in enumerate(ws.iter_rows(min_row=min_row, values_only=True), start=min_row):
             col_a = row[0]
             col_b = row[1]
             col_c = row[2]
@@ -319,7 +332,8 @@ def build_tag_mapping():
             for code_4d, has_star, original_code in codes_info:
                 description = ""
                 if has_star and desc_col_idx is not None:
-                    desc_cell = row[desc_col_idx]
+                    # 使用 get_merged_cell_value 获取描述，以正确处理合并单元格
+                    desc_cell = get_merged_cell_value(ws, row_idx, desc_col_idx + 1)
                     if desc_cell and str(desc_cell).strip():
                         description = str(desc_cell).strip()
 
