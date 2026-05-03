@@ -697,8 +697,12 @@
     enhancedToggle.addEventListener('click', toggleEnhancedMode);
 
     function initEnhancedMode() {
+      // 检查URL参数或localStorage
+      const urlParams = new URLSearchParams(window.location.search);
+      const hasAdvancedParam = urlParams.get('advanced') === '1';
       const savedEnhanced = localStorage.getItem('enhanced');
-      if (savedEnhanced === 'true') {
+
+      if (hasAdvancedParam || savedEnhanced === 'true') {
         isEnhancedMode = true;
         document.body.classList.add('enhanced');
       }
