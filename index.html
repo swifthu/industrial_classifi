@@ -624,8 +624,8 @@
       <span class="moon">🌙</span>
     </button>
     <button class="enhanced-toggle" id="enhancedToggle" title="增强模式">
-      <span class="icon off">📎</span>
-      <span class="icon on">🔗</span>
+      <span class="icon off">🏷️</span>
+      <span class="icon on">✨</span>
     </button>
   </header>
 
@@ -697,12 +697,11 @@
     enhancedToggle.addEventListener('click', toggleEnhancedMode);
 
     function initEnhancedMode() {
-      // 检查URL参数或localStorage
+      // 只检查URL参数，不读取localStorage，保持初始状态为关闭
       const urlParams = new URLSearchParams(window.location.search);
       const hasAdvancedParam = urlParams.get('advanced') === '1';
-      const savedEnhanced = localStorage.getItem('enhanced');
 
-      if (hasAdvancedParam || savedEnhanced === 'true') {
+      if (hasAdvancedParam) {
         isEnhancedMode = true;
         document.body.classList.add('enhanced');
       }
