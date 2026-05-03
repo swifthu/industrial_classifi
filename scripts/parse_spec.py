@@ -11,16 +11,11 @@ import re
 import openpyxl
 
 # ==================== 模块级配置常量 ====================
-# 工作目录
 WORK_DIR = "/Users/jimmyhu/Documents/Python/industrial_classifi"
-# 四级代码长度（4位）
 LEVEL4_CODE_LENGTH = 4
-# Excel 解析起始行（跳过标题行）
-EXCEL_MIN_ROW = 2
-WORKTREE_DIR = "/Users/jimmyhu/Documents/Python/industrial_classifi/.claude/worktrees/laughing-yonath-36fee0"
-SPEC_FILE = "/Users/jimmyhu/Documents/Python/industrial_classifi/spec.xlsx"
-BASE_DATA_FILE = os.path.join(WORKTREE_DIR, "data", "industry_tree_basic.json")
-OUTPUT_FILE = os.path.join(WORKTREE_DIR, "data", "industry_tree_advanced.json")
+SPEC_FILE = os.path.join(WORK_DIR, "spec.xlsx")
+BASE_DATA_FILE = os.path.join(WORK_DIR, "data", "industry_tree_basic.json")
+OUTPUT_FILE = os.path.join(WORK_DIR, "data", "industry_tree_advanced.json")
 
 # 标签定义
 TAGS_MAP = {
@@ -33,30 +28,31 @@ TAGS_MAP = {
     "culture": "文化产业"
 }
 
-# 各Sheet的配置: (tag_key, 代码列索引列表, 行业信息列索引或None, 说明列索引或None)
-# 每个sheet结构不同，需要分别处理
-# 代码列说明：
-# - 高技术制造业: E列(2710)是4位行业代码
-# - 高技术服务业: E列(6311)是4位行业代码
-# - 知识产权密集型: D列(3921)是4位行业代码
-# - 战略性新兴产业: C列(3911)是4位国民经济代码，F列是行业信息
-# - 数字经济核心产业: F列包含带*代码(如"3911 计算机整机制造")，H列是行业信息
-# - 养老产业: F列包含带*代码和说明(如"6242* 外卖送餐服务")，I列是行业信息
-# - 文化产业: F列是4位行业代码
-# 注意：SHEET_CONFIG的key用于匹配Excel sheet名称，需要strip()处理末尾空格
+# 各Sheet配置: (tag_key, 代码列索引, 说明列索引, 数据起始行)
+# 每行列含义：
+# 高技术制造: A(大类),B(中类),C(小类),D(名称),E(代码),F(代码2),G(分类)
+# 高技术服务: A(大类),B(中类),C(小类),D(名称),E(代码),F(说明),G(代码2),H(分类)
+# 知识产权: A(大类),B(中类),C(分类名),D(国民经济代码),E(名称),F(代码),G(分类)
+# 战略性: A(分类代码),B(分类名),C(代码),D(行业名),E(代码2),F(分类)
+# 数字经济: A(大类),B(中类),C(小类),D(名称),E(说明),F(代码),G(代码2),H(分类)
+# 养老: A(大类),B(中类),C(小类),D(名称),E(说明),F(代码),I(分类)
+# 文化: A(大类),B(中类),C(小类),D(名称),E(说明),F(代码),G(分类)
 SHEET_CONFIG = {
-    "高技术（制造业）": ("highTech_mfg", [4], None, None),   # E列 - 4位代码2710
-    "高技术（服务业）": ("highTech_svc", [4], None, None),   # E列 - 4位代码6311
-    "知识产权密集型产业": ("ip密集型", [3], None, None),      # D列 - 4位代码3921
-    "战略性新兴产业 ": ("strategic", [2], 5, None),          # C列(索引2)是代码，F列(索引5)是行业信息
-    "数字经济核心产业": ("digital", [5], 7, None),           # F列(索引5)是代码，H列(索引7)是行业信息
-    "养老产业": ("pension", [5], 8, None),                  # F列(索引5)是带*代码，I列(索引8)是行业信息
-    "文化产业": ("culture", [5], None, None),               # F列 - 4位代码
+    "高技术（制造业）": ("highTech_mfg", 4, None, 3),
+    "高技术（服务业）": ("highTech_svc", 4, 5, 4),
+    "知识产权密集型产业": ("ip密集型", 5, None, 6),
+    "战略性新兴产业 ": ("strategic", 2, 5, 4),
+    "数字经济核心产业": ("digital", 5, 4, 6),
+    "养老产业": ("pension", 5, 4, 5),
+    "文化产业": ("culture", 5, 4, 8),
 }
+
+STRATEGIC_PRODUCTS_SHEET = "战略新兴产业重点说明"
+STRATEGIC_PRODUCTS_CODE_COL = 2
+STRATEGIC_PRODUCTS_COL = 4
 
 
 def load_base_data():
-    """加载基础行业分类数据"""
     try:
         with open(BASE_DATA_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -67,220 +63,322 @@ def load_base_data():
 
 
 def collect_level4_nodes(node, nodes_dict):
-    """递归收集所有四级节点"""
     if node["level"] == 4:
         nodes_dict[node["code"]] = node
     for child in node.get("children", []):
         collect_level4_nodes(child, nodes_dict)
 
 
-def parse_code(code_str):
-    """
-    解析代码字符串，提取前4位数字
-    返回: (code_4d, has_star, description)
-    - code_4d: 前4位数字代码
-    - has_star: 是否带*号（需要细化）
-    - description: 原始说明内容
-    """
-    if not code_str:
-        return None, False, None
-
-    code_str = str(code_str).strip()
-
-    # 检查是否带*号
-    has_star = "*" in code_str
-
-    # 提取前4位数字（处理可能的字符串格式如'3911'）
-    match = re.match(rf"^(\d{{{LEVEL4_CODE_LENGTH}}})", code_str)
-    if match:
-        return match.group(1), has_star, code_str
-
-    return None, False, None
-
-
-def build_tag_mapping():
-    """
-    从spec.xlsx构建 tag 映射表
-    返回: {4位代码: {tag_key: {has_star: bool, description: str}}}
-    """
-    wb = openpyxl.load_workbook(SPEC_FILE, data_only=True)
-
-    tag_mapping = {}
-
-    for sheet_name, (tag_key, code_col_idx_list, industry_col_idx, desc_col_idx) in SHEET_CONFIG.items():
-        # 处理 sheet_name 末尾空格问题（如"战略性新兴产业 "）
-        # 直接用原始 sheet_name 访问（openpyxl 支持精确匹配）
-        if sheet_name not in wb.sheetnames:
-            print(f"警告: Sheet '{sheet_name}' 不存在，跳过")
-            continue
-
-        ws = wb[sheet_name]
-
-        for row in ws.iter_rows(min_row=EXCEL_MIN_ROW):  # 跳过标题行
-            # 支持多个代码列
-            for code_col_idx in code_col_idx_list:
-                code_cell = row[code_col_idx]
-
-                if not code_cell.value:
-                    continue
-
-                code_str = str(code_cell.value).strip()
-
-                # 处理特殊格式：如 "3911 计算机整机制造" 或 "6242* 外卖送餐服务8010* 家庭服务"
-                # 提取所有4位代码及其*标记
-                codes_info = extract_codes_from_string(code_str)
-
-                for code_4d, has_star, original_code in codes_info:
-                    # 获取行业信息（用于带*的代码）
-                    industry_info = ""
-                    if has_star and industry_col_idx is not None:
-                        industry_cell = row[industry_col_idx]
-                        if industry_cell and industry_cell.value:
-                            industry_info = str(industry_cell.value).strip()
-
-                    # 对于带*号的，使用原始代码作为description
-                    description = original_code if has_star else ""
-
-                    if code_4d not in tag_mapping:
-                        tag_mapping[code_4d] = {}
-
-                    if has_star:
-                        # 带*号的记录原始代码作为说明
-                        tag_mapping[code_4d][tag_key] = {
-                            "has_star": True,
-                            "description": description,
-                            "industry": industry_info
-                        }
-                    else:
-                        # 精确匹配，不带说明
-                        tag_mapping[code_4d][tag_key] = {
-                            "has_star": False,
-                            "description": "",
-                            "industry": ""
-                        }
-
-    wb.close()
-
-    # 特别处理：战略性新兴产业 tagDetail 需要从"战略新兴产业重点说明" Sheet获取细化说明
-    _enrich_strategic_details(tag_mapping)
-
-    return tag_mapping
-
-
-def _enrich_strategic_details(tag_mapping):
-    """
-    从"战略新兴产业重点说明"Sheet获取战略性新兴产业的细化说明
-    结构：
-    - C列 = 国民经济行业代码（4位，可能带*）
-    - E列 = 具体产品细项（可能有多个连续行属于同一个代码）
-    - 当C列有新的非空值时，表示前一个代码的细化说明已经结束
-    """
-    wb = openpyxl.load_workbook(SPEC_FILE, data_only=True)
-
-    if "战略新兴产业重点说明" not in wb.sheetnames:
-        print("警告: '战略新兴产业重点说明' Sheet不存在")
-        wb.close()
-        return
-
-    ws = wb["战略新兴产业重点说明"]
-    current_code = None
-    code_details = {}  # code -> [detail1, detail2, ...]
-
-    for i, row in enumerate(ws.iter_rows(min_row=1, values_only=True), 1):
-        # 跳过标题行（前3行）
-        if i <= 3:
-            continue
-
-        c_val = row[2] if len(row) > 2 else None  # C列
-        e_val = row[4] if len(row) > 4 else None  # E列
-
-        # 如果C列有新值（4位代码），更新当前代码
-        if c_val and str(c_val).strip():
-            s = str(c_val).strip()
-            # 处理带*号的代码（如"3919*"或"3919"）
-            if len(s) >= 4 and s[:4].isdigit():
-                code_part = s[:4]
-                has_star = '*' in s
-                current_code = code_part + ('*' if has_star else '')
-
-                if current_code not in code_details:
-                    code_details[current_code] = []
-
-                # 如果同一行E列也有内容（第一个产品），也要添加
-                if e_val and str(e_val).strip():
-                    code_details[current_code].append(str(e_val).strip())
-
-        # 如果C列为空但E列有值，添加到当前代码的列表（后续产品）
-        elif current_code and e_val and str(e_val).strip():
-            code_details[current_code].append(str(e_val).strip())
-
-    wb.close()
-
-    # 更新 tag_mapping 中的 strategic tagDetail
-    for code_4d, details in code_details.items():
-        if details:
-            # 匹配：去掉*号后匹配
-            code_base = code_4d.rstrip('*')
-
-            if code_base in tag_mapping and "strategic" in tag_mapping[code_base]:
-                # 将详细列表加入 tagDetail
-                tag_mapping[code_base]["strategic"]["details"] = details
-
-    print(f"    从'战略新兴产业重点说明'解析了 {len(code_details)} 个代码的细化说明")
-
-
 def extract_codes_from_string(code_str):
-    """
-    从字符串中提取所有4位代码及其完整内容
-    例如："3911 计算机整机制造" -> [("3911", False, "3911 计算机整机制造")]
-          "6242* 外卖送餐服务8010* 家庭服务" -> [("6242", True, "6242* 外卖送餐服务"), ("8010", True, "8010* 家庭服务")]
-          "1491* 营养食品制造" -> [("1491", True, "1491* 营养食品制造")]
-    """
     results = []
     if not code_str:
         return results
 
-    # 匹配4位数字 + *（可选） + 后续内容（到下一个4位数字或字符串结尾）
-    pattern = rf'(\d{{{LEVEL4_CODE_LENGTH}}})(\*)?([^\d]*?)(?=\d{{{LEVEL4_CODE_LENGTH}}}|$)'
+    pattern = rf'(\d{{{LEVEL4_CODE_LENGTH}}})(\*?)'
     matches = re.findall(pattern, code_str)
-
     for match in matches:
         code_4d = match[0]
         has_star = match[1] == '*'
-        rest = match[2].strip()
-
-        if has_star:
-            original = f'{code_4d}* {rest}' if rest else f'{code_4d}*'
-        else:
-            original = f'{code_4d} {rest}' if rest else code_4d
-
+        original = code_4d + ('*' if has_star else '')
         results.append((code_4d, has_star, original))
 
     return results
 
 
+def build_strategic_products_mapping():
+    wb = openpyxl.load_workbook(SPEC_FILE, data_only=True)
+
+    if STRATEGIC_PRODUCTS_SHEET not in wb.sheetnames:
+        print(f"警告: Sheet '{STRATEGIC_PRODUCTS_SHEET}' 不存在")
+        wb.close()
+        return {}
+
+    ws = wb[STRATEGIC_PRODUCTS_SHEET]
+    code_products = {}
+    current_code = None
+
+    for row in ws.iter_rows(min_row=4, values_only=True):
+        col_c = row[STRATEGIC_PRODUCTS_CODE_COL]
+        col_e = row[STRATEGIC_PRODUCTS_COL]
+
+        if col_c and str(col_c).strip():
+            code_str = str(col_c).strip()
+            if code_str.endswith('*'):
+                current_code = code_str
+                code_products[current_code] = []
+
+        if current_code and col_e and str(col_e).strip():
+            code_products[current_code].append(str(col_e).strip())
+
+    wb.close()
+    return code_products
+
+
+def update_category_path(path, a, b, c, d, is_strategic=False, large_cat=None):
+    """
+    根据行列信息更新category路径
+
+    普通sheet: A(大类),B(中类),C(小类),D(名称)
+    战略性sheet: A(分类代码如1.1.3),B(分类名称),C(代码),D(国民经济行业名称),large_cat(F列大类名)
+    """
+    if path is None:
+        path = []
+
+    b_str = str(b).strip() if b else ""
+    c_str = str(c).strip() if c else ""
+    d_str = str(d).strip() if d else ""
+
+    if is_strategic:
+        # 战略性新兴产业：解析A列的分类代码（如1.1.3）来构建路径
+        # A列格式：大类.中类.小类，或只有中类如1.1，或只有大类如1
+        if a is not None and b_str:
+            a_str = str(a).strip()
+            parts = a_str.split('.')
+            level = len(parts)  # 1=大类, 2=中类, 3=小类
+
+            if level == 1:
+                # 大类，如"1" -> "新一代信息技术产业"
+                path = [b_str]
+            elif level == 2:
+                # 中类，如"1.1" -> "下一代信息网络产业"
+                if large_cat:
+                    path = [large_cat, b_str]
+                else:
+                    path = [b_str]
+            elif level >= 3:
+                # 小类，如"1.1.3" -> 设置为第三级，追加而不是覆盖
+                if large_cat:
+                    if len(path) >= 2 and path[0] == large_cat:
+                        # 大类已存在，替换第三级
+                        path = [path[0], path[1] if len(path) > 1 else '', b_str]
+                    else:
+                        # 新的大类
+                        path = [large_cat, b_str]
+                else:
+                    path = [b_str]
+            return path
+        elif a is None and b_str == '' and d_str:
+            # 叶子行（A=None），使用当前path，追加小类名
+            path = path + [d_str]
+            return path
+        return path if path else []
+    else:
+        # B有值 = 中类（B列是代码，说明有子分类）
+        if b is not None and d_str:
+            # c有值说明B是中类代码，C是中类名称
+            if c is not None:
+                if path and len(path) >= 1 and path[0]:
+                    return [path[0], d_str, ""]
+                return [d_str, ""]
+            else:  # 只有两级（没有小类）
+                if path and len(path) >= 1 and path[0]:
+                    return [path[0], d_str]
+                return [d_str]
+        # C有值 = 小类（叶子节点）
+        if c is not None and d_str:
+            if path:
+                if len(path) >= 2 and path[-1] == '':
+                    return path[:-1] + [d_str]
+                elif len(path) >= 2:
+                    return path[:2] + [d_str]
+                return path + [d_str]
+            return [d_str]
+        # A有值但B/C为空 = 新的大类开始，重置path
+        if a is not None and d_str and b is None and c is None:
+            return [d_str]
+        # A/B/C都为空但D有时（中间分类名）
+        if d_str and a is None and b is None and c is None:
+            if path:
+                if len(path) >= 1 and path[-1] == '':
+                    # 替换空字符串
+                    return path[:-1] + [d_str]
+                return path + [d_str]
+            return [d_str]
+        return path if path else []
+
+
+def build_tag_mapping():
+    wb = openpyxl.load_workbook(SPEC_FILE, data_only=True)
+
+    strategic_products = build_strategic_products_mapping()
+    print(f"      战略性新兴产业产品目录包含 {len(strategic_products)} 个代码")
+
+    tag_mapping = {}
+
+    for sheet_name, (tag_key, code_col_idx, desc_col_idx, min_row) in SHEET_CONFIG.items():
+        matched_name = None
+        for ws_name in wb.sheetnames:
+            if ws_name.strip() == sheet_name.strip() or ws_name == sheet_name:
+                matched_name = ws_name
+                break
+
+        if matched_name is None:
+            print(f"警告: Sheet '{sheet_name}' 不存在，跳过")
+            continue
+
+        ws = wb[matched_name]
+        category_path = []
+        is_strategic = (tag_key == "strategic")
+        is_ip = (tag_key == "ip密集型")
+
+        for row in ws.iter_rows(min_row=min_row, values_only=True):
+            col_a = row[0]
+            col_b = row[1]
+            col_c = row[2]
+            col_d = row[3]
+
+            # 知识产权sheet用不同的列构建路径
+            if is_ip:
+                col_g = row[6] if len(row) > 6 else None  # G列是大类名
+
+                if col_a is not None and col_c:
+                    # A列有值时表示新的大类开始，path需要重置
+                    category_path = []
+                    large_cat = col_c
+                    name_col = col_c  # 大类名
+                elif col_g:
+                    # G列有值，表示继承当前大类
+                    large_cat = col_g
+                    if col_b is not None and col_c:
+                        # B有值=中类行，name_col用C列（中类名），leaf用E列（具体名称）
+                        name_col = col_c  # 中类名
+                    elif row[4] and not str(row[4]).isdigit():
+                        # B为空但E列有非数字名称，用E列
+                        name_col = row[4]
+                    else:
+                        name_col = col_c if col_c else ''
+                else:
+                    large_cat = None
+                    name_col = ''
+            else:
+                name_col = col_d  # D列是名称
+                # 对于战略性sheet，F列是大类名
+                large_cat = row[5] if is_strategic and len(row) > 5 else col_a
+
+            # 更新路径
+            # IP密集型sheet结构:
+            # - 大类行: A有值, C是大类名
+            # - 中类行: B有值, C是中类名, F有代码
+            # - 叶子行: B为空, F有代码, E是具体名称
+            if is_ip:
+                if col_a is not None and col_c:
+                    # 大类行
+                    category_path = [large_cat]
+                elif col_b is not None and col_c:
+                    # 中类行：B有值，创建[大类, 中类名, '']
+                    category_path = [large_cat, col_c.strip(), '']
+                elif col_b is None and col_c is None and large_cat and name_col:
+                    # 叶子行: B和C都为空，用叶子名称替换path的最后一个元素
+                    if len(category_path) >= 1:
+                        category_path[-1] = name_col
+                    else:
+                        category_path = [name_col]
+                else:
+                    category_path = update_category_path(category_path, large_cat, col_b, col_c, name_col, is_strategic)
+            elif is_strategic:
+                # 战略性sheet结构: A=分类代码(如1.1.3), B=分类名称, C=代码, D=行业名称, F=大类名
+                if col_a is not None and col_b:
+                    a_str = str(col_a).strip()
+                    parts = a_str.split('.')
+                    level = len(parts)
+
+                    current_large = large_cat if large_cat else ''
+
+                    if level == 1:
+                        # 大类
+                        category_path = [col_b]
+                        if 'mid_cache' not in tag_mapping:
+                            tag_mapping['mid_cache'] = {}
+                    elif level == 2:
+                        # 中类
+                        mid_cache = tag_mapping.get('mid_cache', {})
+                        mid_cache[a_str] = col_b
+                        tag_mapping['mid_cache'] = mid_cache
+                        category_path = [current_large, col_b] if current_large else [col_b]
+                    elif level >= 3:
+                        # 小类
+                        mid_cache = tag_mapping.get('mid_cache', {})
+                        mid_code = '.'.join(parts[:-1])
+                        mid_name = mid_cache.get(mid_code, '')
+                        category_path = [current_large, mid_name, col_b] if current_large else [mid_name, col_b]
+                elif col_a is None and col_b is None and col_c is None and col_d:
+                    # 叶子行: C为空，D是行业名称，追加到path
+                    category_path = category_path + [col_d]
+                # 如果C有值（代码行），不修改path，让代码使用当前path
+            else:
+                category_path = update_category_path(category_path, large_cat, col_b, col_c, name_col, is_strategic)
+
+            # 获取代码
+            code_cell = row[code_col_idx]
+            if not code_cell:
+                continue
+
+            code_str = str(code_cell).strip()
+            codes_info = extract_codes_from_string(code_str)
+
+            for code_4d, has_star, original_code in codes_info:
+                description = ""
+                if has_star and desc_col_idx is not None:
+                    desc_cell = row[desc_col_idx]
+                    if desc_cell and str(desc_cell).strip():
+                        description = str(desc_cell).strip()
+
+                # 对于战略性新兴产业，同一个代码可能在不同分类中出现多次，需要收集所有分类
+                if tag_key == "strategic" and code_4d in tag_mapping and "strategic" in tag_mapping[code_4d]:
+                    # 已有记录，收集多个分类
+                    existing = tag_mapping[code_4d]["strategic"]
+                    if "categories" not in existing:
+                        existing["categories"] = [existing.get("category", "")] if existing.get("category") else []
+                    cat = " > ".join(filter(None, category_path))
+                    if cat and cat not in existing["categories"]:
+                        existing["categories"].append(cat)
+                    # description只保留第一个有description的
+                    if description and not existing.get("description"):
+                        existing["description"] = description
+                    continue
+
+                if code_4d not in tag_mapping:
+                    tag_mapping[code_4d] = {}
+
+                if has_star:
+                    detail = {
+                        "has_star": True,
+                        "category": " > ".join(filter(None, category_path)),
+                        "description": description if description else ""
+                    }
+                    if tag_key == "strategic":
+                        products = strategic_products.get(original_code, [])
+                        if products:
+                            detail["products"] = products
+                    tag_mapping[code_4d][tag_key] = detail
+                else:
+                    tag_mapping[code_4d][tag_key] = {
+                        "has_star": False,
+                        "category": " > ".join(filter(None, category_path)),
+                        "description": ""
+                    }
+
+    wb.close()
+    return tag_mapping
+
+
 def enhance_data():
-    """主函数：增强行业分类数据"""
     print("=" * 50)
     print("开始解析 spec.xlsx 生成增强版数据")
     print("=" * 50)
 
-    # 1. 加载基础数据
     print("\n[1/4] 加载基础数据...")
     base_data = load_base_data()
 
-    # 2. 收集所有四级节点
     print("[2/4] 收集四级节点...")
     level4_nodes = {}
     collect_level4_nodes(base_data, level4_nodes)
     print(f"      找到 {len(level4_nodes)} 个四级节点")
 
-    # 3. 构建 tag 映射
     print("[3/4] 从 spec.xlsx 构建标签映射...")
     tag_mapping = build_tag_mapping()
     print(f"      映射表中包含 {len(tag_mapping)} 个代码")
 
-    # 4. 增强数据
     print("[4/4] 增强四级节点数据...")
 
     stats = {
@@ -290,15 +388,11 @@ def enhance_data():
     }
 
     def enhance_node(node):
-        """递归增强节点"""
         if node["level"] == 4:
             code = node["code"]
-
-            # 初始化 tags 和 tagDetail
             node["tags"] = []
             node["tagDetail"] = {}
 
-            # 前4位代码匹配（使用常量）
             code_prefix = code[:LEVEL4_CODE_LENGTH]
 
             if code_prefix in tag_mapping:
@@ -307,25 +401,13 @@ def enhance_data():
                         node["tags"].append(tag_key)
                         stats["tagged"] += 1
                         stats["by_tag"][tag_key] += 1
-
-                    if tag_info["has_star"]:
-                        # 带*号的 tagDetail 应该包含行业说明
-                        detail = {"description": tag_info["description"]}
-                        if tag_info["industry"]:
-                            detail["industry"] = tag_info["industry"]
-                        # 如果有 details（从"战略新兴产业重点说明"获取），也加入
-                        if "details" in tag_info:
-                            detail["details"] = tag_info["details"]
-                        node["tagDetail"][tag_key] = detail
-                    else:
-                        node["tagDetail"][tag_key] = {}
+                    node["tagDetail"][tag_key] = tag_info
 
         for child in node.get("children", []):
             enhance_node(child)
 
     enhance_node(base_data)
 
-    # 5. 保存结果
     print("\n[保存] 输出到 industry_tree_advanced.json...")
     try:
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
@@ -333,7 +415,6 @@ def enhance_data():
     except IOError as e:
         raise IOError(f"写入输出文件失败: {OUTPUT_FILE}, 错误: {e}")
 
-    # 6. 打印统计
     print("\n" + "=" * 50)
     print("处理完成!")
     print("=" * 50)

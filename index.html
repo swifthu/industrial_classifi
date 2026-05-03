@@ -499,15 +499,29 @@
       font-size: 11px;
       padding: 2px 6px;
       border-radius: 3px;
-      background-color: #FFF8E1;
-      color: #795548;
+      background-color: #90EE90;
+      color: #2E7D32;
       white-space: nowrap;
       flex-shrink: 0;
     }
 
+    .tag-badge.no-star {
+      background-color: #90EE90;
+      color: #2E7D32;
+    }
+
+    .tag-badge.no-star:hover {
+      background-color: #228B22;
+    }
+
     body.dark .tag-badge {
-      background-color: #5D4C3A;
-      color: #FFE082;
+      background-color: #3E5C28;
+      color: #A5D6A7;
+    }
+
+    body.dark .tag-badge.no-star {
+      background-color: #3E5C28;
+      color: #A5D6A7;
     }
 
     .tag-badge.has-detail {
@@ -515,14 +529,29 @@
       text-decoration: underline;
       text-decoration-style: dotted;
       text-underline-offset: 2px;
+      background-color: #FFF8DC;
+      color: #8B6914;
+    }
+
+    body.dark .tag-badge.has-detail {
+      background-color: #5C4A2A;
+      color: #D4C4A8;
+    }
+
+    .tag-badge.no-star:hover {
+      background-color: #66CDAA;
+    }
+
+    body.dark .tag-badge.no-star:hover {
+      background-color: #4A6741;
     }
 
     .tag-badge.has-detail:hover {
-      background-color: #FFECB3;
+      background-color: #F0C000;
     }
 
     body.dark .tag-badge.has-detail:hover {
-      background-color: #6D5C4A;
+      background-color: #8B6914;
     }
 
     /* 标签容器 */
@@ -544,6 +573,7 @@
       z-index: 1000;
       max-width: 280px;
       font-size: 12px;
+    }
       line-height: 1.5;
       color: var(--text-primary);
       display: none;
@@ -553,14 +583,18 @@
       display: block;
     }
 
-    .tag-popup .popup-title {
-      font-weight: bold;
-      margin-bottom: 6px;
+    .tag-popup .popup-category {
       color: var(--text-primary);
+      margin-bottom: 6px;
+      line-height: 1.6;
     }
 
     .tag-popup .popup-content {
       color: var(--text-secondary);
+      background: #FFF8DC;
+      border-top: 1px solid var(--border-color);
+      padding: 6px 8px;
+      margin-top: 6px;
     }
 
     .tag-popup .popup-code {
@@ -610,13 +644,13 @@
   <script>
     // 标签定义
     const TAGS_MAP = {
-      "highTech_mfg": "高技术（制造业）",
-      "highTech_svc": "高技术（服务业）",
-      "ip密集型": "知识产权密集型产业",
-      "strategic": "战略性新兴产业",
-      "digital": "数字经济核心产业",
-      "pension": "养老产业",
-      "culture": "文化产业"
+      "highTech_mfg": "高制",
+      "highTech_svc": "高服",
+      "ip密集型": "知识",
+      "strategic": "战兴",
+      "digital": "数字",
+      "pension": "养老",
+      "culture": "文化"
     };
 
     // 全局数据
@@ -778,9 +812,18 @@
           tagBadge.className = 'tag-badge';
           const tagDetail = node.tagDetail && node.tagDetail[tag];
           if (tagDetail) {
-            tagBadge.classList.add('has-detail');
+            const hasDescription = tagDetail.description && tagDetail.description.trim();
+            const hasProducts = tagDetail.products && tagDetail.products.length > 0;
+            if (hasDescription || hasProducts) {
+              tagBadge.classList.add('has-detail');  // 米黄色
+            } else {
+              tagBadge.classList.add('no-star');  // 浅绿色
+            }
+            tagBadge.dataset.tagKey = tag;
+            tagBadge.dataset.category = tagDetail.category || '';
             tagBadge.dataset.description = tagDetail.description || '';
-            tagBadge.dataset.industry = tagDetail.industry || '';
+            tagBadge.dataset.categories = JSON.stringify(tagDetail.categories || []);
+            tagBadge.dataset.products = JSON.stringify(tagDetail.products || []);
             tagBadge.addEventListener('click', showTagPopup);
           }
           tagBadge.textContent = TAGS_MAP[tag] || tag;
@@ -862,46 +905,113 @@
     function showTagPopup(e) {
       e.stopPropagation();
       e.preventDefault();
+      console.log('showTagPopup called', e.target);
 
       // 关闭现有浮窗
       closeTagPopup();
 
       const badge = e.target;
-      const description = badge.dataset.description;
-      const industry = badge.dataset.industry;
+      const tagKey = badge.dataset.tagKey;
+      const category = badge.dataset.category;
+      let description = badge.dataset.description;
+      const categoriesJson = badge.dataset.categories;
+      const productsJson = badge.dataset.products;
+      const categoriesList = categoriesJson ? JSON.parse(categoriesJson) : [];
 
-      const popup = document.createElement('div');
-      popup.className = 'tag-popup';
-      popup.innerHTML = `
-        <div class="popup-title">${industry || ''}</div>
-        <div class="popup-content">${description || ''}</div>
-      `;
+      // 如果description为空且has_star为false，显示"涵盖本行业所有类目"
+      if (!description && badge.classList.contains('no-star')) {
+        description = '涵盖本行业所有类目';
+      }
+
+      let categoryLines = '';
+      let sectionsHtml = '';
+
+      let popup;  // 在外部声明，供 updatePopupPosition 访问
+
+      const isStrategic = tagKey === 'strategic';
+
+      if (isStrategic) {
+        // strategic标签：显示category层级 + products用米黄色背景
+        const parts = category ? category.split(' > ') : [];
+        const lines = parts.map((c, i) => {
+          if (i === 0) return `<div style="color: var(--text-primary);">${c}</div>`;
+          const prefix = i === 1 ? '— ' : '—— ';
+          return `<div style="color: var(--text-primary);">${prefix}${c}</div>`;
+        });
+        categoryLines = lines.join('');
+
+        // products用米黄色背景显示
+        let productsHtml = '';
+        if (productsJson) {
+          const products = JSON.parse(productsJson);
+          if (products.length > 0) {
+            productsHtml = `<div class="popup-content">产品：${products.join('、')}</div>`;
+          }
+        }
+
+        popup = document.createElement('div');
+        popup.className = 'tag-popup has-detail';
+        popup.innerHTML = `
+          ${categoryLines}
+          ${productsHtml}
+        `;
+      } else {
+        // 普通标签：按 > 分隔成多行显示
+        const parts = category ? category.split(' > ') : [];
+        const lines = parts.map((c, i) => {
+          if (i === 0) return `<div style="color: var(--text-primary);">${c}</div>`;
+          const prefix = i === 1 ? '— ' : '—— ';
+          return `<div style="color: var(--text-primary);">${prefix}${c}</div>`;
+        });
+        categoryLines = lines.join('');
+
+        const hasDescription = description && description.trim();
+        const descriptionHtml = hasDescription ? `<div class="popup-content">${description}</div>` : '';
+
+        popup = document.createElement('div');
+        popup.className = 'tag-popup' + (hasDescription ? ' has-detail' : '');
+        popup.innerHTML = `
+          ${categoryLines}
+          ${descriptionHtml}
+        `;
+      }
 
       document.body.appendChild(popup);
       currentPopup = popup;
 
       // 计算浮窗位置
-      const rect = badge.getBoundingClientRect();
-      const popupRect = popup.getBoundingClientRect();
+      function updatePopupPosition() {
+        const rect = badge.getBoundingClientRect();
+        const popupRect = popup.getBoundingClientRect();
 
-      let left = rect.left;
-      let top = rect.bottom + 5;
+        let left = rect.left;
+        let top = rect.bottom + 5;
 
-      // 确保浮窗不超出右边界
-      if (left + popupRect.width > window.innerWidth - 10) {
-        left = window.innerWidth - popupRect.width - 10;
-      }
-      // 确保浮窗不超出左边界
-      if (left < 10) {
-        left = 10;
-      }
-      // 检测下边界
-      if (top + popupRect.height > window.innerHeight - 10) {
-        top = rect.top - popupRect.height - 5;
+        // 确保浮窗不超出右边界
+        if (left + popupRect.width > window.innerWidth - 10) {
+          left = window.innerWidth - popupRect.width - 10;
+        }
+        // 确保浮窗不超出左边界
+        if (left < 10) {
+          left = 10;
+        }
+        // 检测下边界
+        if (top + popupRect.height > window.innerHeight - 10) {
+          top = rect.top - popupRect.height - 5;
+        }
+
+        popup.style.left = left + 'px';
+        popup.style.top = top + 'px';
       }
 
-      popup.style.left = left + 'px';
-      popup.style.top = top + 'px';
+      updatePopupPosition();
+
+      // 监听滚动事件，关闭浮窗
+      const scrollHandler = () => {
+        closeTagPopup();
+      };
+      window.addEventListener('scroll', scrollHandler, true);
+      popup._scrollHandler = scrollHandler;
 
       // 延迟显示以应用过渡效果
       setTimeout(() => {
@@ -911,6 +1021,9 @@
 
     function closeTagPopup() {
       if (currentPopup) {
+        if (currentPopup._scrollHandler) {
+          window.removeEventListener('scroll', currentPopup._scrollHandler, true);
+        }
         currentPopup.remove();
         currentPopup = null;
       }
