@@ -10,17 +10,21 @@
 - **分类统计**：共收录 **1382** 个行业细类，覆盖全部 20 个门类
 - **详情展示**：点击展开查看详细说明，包含"包括"和"不包括"分类
 - **响应式设计**：适配桌面和移动设备
+- **增强模式**：点击 ✨ 按钮开启，展示高技术、战略性新兴产业、知识产权密集型等标签
+- **主题切换**：支持亮色/暗黑模式
 
 ## 目录结构
 
 ```
 industrial_classifi/
-├── index.html              # 前端页面
+├── index.html                    # 前端页面
 ├── data/
-│   └── industry_tree.json  # 行业分类数据（自动生成）
+│   ├── industry_tree_basic.json    # 基础行业分类数据
+│   └── industry_tree_advanced.json # 增强版（含标签数据）
 ├── scripts/
-│   └── parse_ref.py       # Excel 解析脚本
-└── ref.xlsx               # 原始数据文件（需准备）
+│   └── parse_spec.py            # Excel 解析脚本（生成增强版数据）
+├── spec.xlsx                    # 原始数据文件（含标签定义）
+└── ref.xlsx                    # 原始数据文件（需准备）
 ```
 
 ## 使用方法
@@ -65,14 +69,34 @@ python3 -m http.server 8080
 — 水果种植（列入水果种植相关类别）
 ```
 
+### 增强标签
+
+开启增强模式后，行业细类可关联以下 7 种标签：
+
+| 标签 | 说明 |
+|------|------|
+| 高制 | 高技术（制造业） |
+| 高服 | 高技术（服务业） |
+| 知识 | 知识产权密集型产业 |
+| 战兴 | 战略性新兴产业 |
+| 数字 | 数字经济核心产业 |
+| 养老 | 养老产业 |
+| 文化 | 文化产业 |
+
+点击标签可查看详细分类路径和产品目录。
+
 ## 数据更新
 
 如需从原始 Excel 更新数据：
 
 ```bash
-# 确保有 ref.xlsx 文件
-python3 scripts/parse_ref.py
+# 确保有 spec.xlsx 文件
+python3 scripts/parse_spec.py
 ```
+
+生成两个数据文件：
+- `industry_tree_basic.json` - 基础分类数据
+- `industry_tree_advanced.json` - 增强版（含 7 种标签）
 
 ## 技术栈
 
